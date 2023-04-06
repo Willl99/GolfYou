@@ -13,13 +13,15 @@ namespace GolfYou
         Texture2D runLeftSet;
         Texture2D puttingRightSet;
         Texture2D puttingLeftSet;
+        Texture2D head;
 
         Rectangle[] sourceRectanglesRun;
         Rectangle[] sourceRectanglesPutting;
         Rectangle playerHitbox = new Rectangle(0, 200, 32, 32);
 
         byte currentAnimationIndexRun;
-        byte currentAnimationIndexPutting;
+        byte currentAnimationIndexPuttingRight;
+        byte currentAnimationIndexPuttingLeft;
         private int threshold;
         float timer;
         private float movement = 0.0f;
@@ -27,7 +29,6 @@ namespace GolfYou
         public bool rolling;
         private bool isPutting;
         private bool wasPutting;
-        private bool flying;
         private int hittingMode; // 0 = drive, 1 = tap
 
         private const float MoveAcceleration = 13000.0f;
@@ -51,6 +52,8 @@ namespace GolfYou
             puttingLeftSet = Content.Load<Texture2D>("Sprites/PlayerPuttingAllFlipped");
 
             currentAnimationIndexRun = 0;
+            currentAnimationIndexPuttingLeft = 0;
+            currentAnimationIndexPuttingRight = 0;
             rolling = false;
             timer = 0;
             threshold = 10;
@@ -80,7 +83,7 @@ namespace GolfYou
             }
             else if (facing == 1 && isPutting || facing == 1 && wasPutting)
             {
-                _spriteBatch.Draw(puttingRightSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 32, 40), sourceRectanglesPutting[currentAnimationIndexPutting], Color.White);
+                _spriteBatch.Draw(puttingRightSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 32, 40), sourceRectanglesPutting[currentAnimationIndexPuttingRight], Color.White);
             }
             else if (facing == 0 && movement < 0 && !isPutting && !wasPutting)
             {
@@ -92,7 +95,7 @@ namespace GolfYou
             }
             else if (facing == 0 && isPutting || facing == 0 && wasPutting)
             {
-                _spriteBatch.Draw(puttingRightSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 32, 40), sourceRectanglesPutting[currentAnimationIndexPutting], Color.White);
+                _spriteBatch.Draw(puttingLeftSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 32, 40), sourceRectanglesPutting[currentAnimationIndexPuttingLeft], Color.White);
             }
 
         }
@@ -144,9 +147,9 @@ namespace GolfYou
                 threshold = 100;
                 if (timer > threshold)
                 {
-                    if (currentAnimationIndexPutting < 5)
+                    if (currentAnimationIndexPuttingRight < 5)
                     {
-                        currentAnimationIndexPutting++;
+                        currentAnimationIndexPuttingRight++;
                     }
                     timer = 0;
                 }
@@ -160,9 +163,48 @@ namespace GolfYou
                 threshold = 15;
                 if (timer > threshold)
                 {
-                    if (currentAnimationIndexPutting > 0)
+                    if (currentAnimationIndexPuttingRight > 0)
                     {
-                        currentAnimationIndexPutting--;
+                        currentAnimationIndexPuttingRight--;
+                    }
+                    else
+                    {
+                        wasPutting = false;
+                        rolling = true;
+                    }
+                    timer = 0;
+                }
+                else
+                {
+                    timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                }
+
+
+            }
+            else if (facing == 0 && isPutting)
+            {
+                threshold = 100;
+                if (timer > threshold)
+                {
+                    if (currentAnimationIndexPuttingLeft > 0 )
+                    {
+                        currentAnimationIndexPuttingLeft--;
+                    }
+                    timer = 0;
+                }
+                else
+                {
+                    timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                }
+            }
+            else if (facing == 0 && wasPutting)
+            {
+                threshold = 15;
+                if (timer > threshold)
+                {
+                    if (currentAnimationIndexPuttingLeft < 5)
+                    {
+                        currentAnimationIndexPuttingLeft++;
                     }
                     else
                     {
@@ -195,14 +237,14 @@ namespace GolfYou
             // If any digital horizontal movement input is found, override the analog movement.
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left) ||
-                keyboardState.IsKeyDown(Keys.A) && !isPutting && !wasPutting)
+                keyboardState.IsKeyDown(Keys.A) && !isPutting && !wasPutting && !rolling)
             {
                 facing = 0;
                 movement = -1.0f;
             }
             else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
                      keyboardState.IsKeyDown(Keys.Right) ||
-                     keyboardState.IsKeyDown(Keys.D) && !isPutting && !wasPutting)
+                     keyboardState.IsKeyDown(Keys.D) && !isPutting && !wasPutting && !rolling)
             {
                 facing = 1;
                 movement = 1.0f;
@@ -226,7 +268,8 @@ namespace GolfYou
             {
                 isPutting = false;
                 wasPutting = false;
-                currentAnimationIndexPutting = 0;
+                currentAnimationIndexPuttingRight = 0;
+                currentAnimationIndexPuttingLeft = 5;
             }
 
             playerHitbox.X += (int)movement;
@@ -253,6 +296,11 @@ namespace GolfYou
         public bool getWasPutting()
         {
             return wasPutting;
+        }
+
+        public int getFacing()
+        {
+            return facing;
         }
 
         public class myKeyboard

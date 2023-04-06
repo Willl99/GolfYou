@@ -40,7 +40,7 @@ namespace GolfYou
 			// TODO: Add your update logic here
 			myPlayer.playAnimation(gameTime);
 			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
-			myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPosition(), myPlayer.getMovement(), myPlayer.getWasPutting()));
+			myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPosition(), myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing()));
 
 			base.Update(gameTime);
 		}

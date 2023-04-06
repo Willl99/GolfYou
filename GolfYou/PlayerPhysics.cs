@@ -33,7 +33,7 @@ namespace GolfYou
             IsOnGround = false;
         }
 
-        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting)
+        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -44,7 +44,7 @@ namespace GolfYou
             velocity.X += movement * MoveAcceleration * elapsed;
             velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
-            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting);
+            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing);
 
             // Apply pseudo-drag horizontally.
             if (IsOnGround)
@@ -84,14 +84,14 @@ namespace GolfYou
             prevYVelocity = velocity.Y;
             return playerPosition;
         }
-        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting)
+        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing)
         {
             int threshold = 3;
             
             if (isRolling && timer > threshold)
             {
                 GroundDragFactor = .96f;
-                if (velocity.X <= 5) 
+                if (facing == 1 && velocity.X <= 5 || facing == 0 && velocity.X >= -5) 
                 { 
                     isRolling = false;
                     GroundDragFactor = .48f;
@@ -103,9 +103,17 @@ namespace GolfYou
                 timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             }
             if (prevWasPutting && !wasPutting)
-            { 
-                velocity.Y = -1000;
-                velocity.X = 2000;
+            {
+                if (facing == 1)
+                {
+                    velocity.Y = -1000;
+                    velocity.X = 2000;
+                }
+                else
+                {
+                    velocity.Y = -1000;
+                    velocity.X = -2000;
+                }
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);
             }
