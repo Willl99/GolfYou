@@ -39,7 +39,7 @@ namespace GolfYou
 
 			// TODO: Add your update logic here
 			myPlayer.playAnimation(gameTime);
-			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One));
+			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
 
 			base.Update(gameTime);
 		}
