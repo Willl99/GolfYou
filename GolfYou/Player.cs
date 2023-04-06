@@ -50,6 +50,8 @@ namespace GolfYou
             rotation = 0;
             timer = 0;
             threshold = 10;
+            hittingMode = 0;
+
             rolling = false;
             isPutting = false;
 
@@ -272,6 +274,12 @@ namespace GolfYou
                 currentAnimationIndexPuttingLeft = 5;
             }
 
+            if (myKeyboard.HasBeenPressed(Keys.Q) && !isPutting && !wasPutting)
+            {
+                if (hittingMode == 0) { hittingMode = 1; }
+                else { hittingMode = 0; }
+            }
+
             playerHitbox.X += (int)movement;
 
 
@@ -301,6 +309,11 @@ namespace GolfYou
         public int getFacing()
         {
             return facing;
+        }
+
+        public int getHittingMode()
+        {
+            return hittingMode;
         }
 
         public class myKeyboard

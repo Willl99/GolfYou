@@ -38,7 +38,7 @@ namespace GolfYou
             return velocity;
         }
 
-        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing)
+        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -49,7 +49,7 @@ namespace GolfYou
             velocity.X += movement * MoveAcceleration * elapsed;
             velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
-            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing);
+            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode);
 
             // Apply pseudo-drag horizontally.
             if (IsOnGround)
@@ -89,7 +89,7 @@ namespace GolfYou
             prevYVelocity = velocity.Y;
             return playerPosition;
         }
-        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing)
+        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing, int hittingMode)
         {
             int threshold = 3;
             
@@ -107,7 +107,7 @@ namespace GolfYou
             {
                 timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             }
-            if (prevWasPutting && !wasPutting)
+            if (prevWasPutting && !wasPutting && hittingMode == 0)
             {
                 if (facing == 1)
                 {
@@ -117,6 +117,21 @@ namespace GolfYou
                 else
                 {
                     velocity.Y = -1000;
+                    velocity.X = -2000;
+                }
+                prevWasPutting = wasPutting;
+                return new Vector2(velocity.X, velocity.Y);
+            }
+            else if (prevWasPutting && !wasPutting && hittingMode == 1)
+            {
+                if (facing == 1)
+                {
+                    velocity.Y = 0;
+                    velocity.X = 2000;
+                }
+                else
+                {
+                    velocity.Y = 0;
                     velocity.X = -2000;
                 }
                 prevWasPutting = wasPutting;
