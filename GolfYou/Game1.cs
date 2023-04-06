@@ -10,6 +10,7 @@ namespace GolfYou
 		private SpriteBatch _spriteBatch;
 		Player myPlayer = new Player();
 		PlayerPhysics myPhysics = new PlayerPhysics();
+		HUD myHUD = new HUD();
 
 		public Game1()
 		{
@@ -29,6 +30,7 @@ namespace GolfYou
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 			myPlayer.loadPlayerContent(this.Content);
+			myHUD.loadHudContent(this.Content);
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -51,6 +53,7 @@ namespace GolfYou
 			_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 
 			myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
+			myHUD.drawHudContent(_spriteBatch, myPlayer.getHittingMode());
 			// TODO: Add your drawing code here
 			_spriteBatch.End();
 			base.Draw(gameTime);
