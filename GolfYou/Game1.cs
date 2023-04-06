@@ -1,52 +1,59 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace GolfYou
 {
-    public class Game1 : Game
-    {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+	public class Game1 : Game
+	{
+		private GraphicsDeviceManager _graphics;
+		private SpriteBatch _spriteBatch;
+		Player myPlayer = new Player();
 
-        public Game1()
-        {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-        }
 
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
+		public Game1()
+		{
+			_graphics = new GraphicsDeviceManager(this);
+			Content.RootDirectory = "Content";
+			IsMouseVisible = true;
+		}
 
-            base.Initialize();
-        }
+		protected override void Initialize()
+		{
+			// TODO: Add your initialization logic here
 
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+			base.Initialize();
+		}
 
-            // TODO: use this.Content to load your game content here
-        }
+		protected override void LoadContent()
+		{
+			_spriteBatch = new SpriteBatch(GraphicsDevice);
+			myPlayer.loadPlayerContent(this.Content);
+			// TODO: use this.Content to load your game content here
+		}
 
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+		protected override void Update(GameTime gameTime)
+		{
+			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+				Exit();
 
-            // TODO: Add your update logic here
+			// TODO: Add your update logic here
+			myPlayer.playAnimation(gameTime);
+			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One));
 
-            base.Update(gameTime);
-        }
+			base.Update(gameTime);
+		}
 
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+		protected override void Draw(GameTime gameTime)
+		{
+			GraphicsDevice.Clear(Color.CornflowerBlue);
+			_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 
-            // TODO: Add your drawing code here
+			myPlayer.drawPlayer(_spriteBatch, gameTime);
+			// TODO: Add your drawing code here
+			_spriteBatch.End();
+			base.Draw(gameTime);
+		}
 
-            base.Draw(gameTime);
-        }
-    }
+	}
 }
