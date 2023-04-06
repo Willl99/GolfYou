@@ -52,7 +52,7 @@ namespace GolfYou
             puttingLeftSet = Content.Load<Texture2D>("Sprites/PlayerPuttingAllFlipped");
 
             currentAnimationIndexRun = 0;
-            currentAnimationIndexPuttingLeft = 0;
+            currentAnimationIndexPuttingLeft = 5;
             currentAnimationIndexPuttingRight = 0;
             rolling = false;
             timer = 0;
@@ -67,7 +67,7 @@ namespace GolfYou
             sourceRectanglesPutting = new Rectangle[6];
             for (int i = 0; i < 6; i++)
             {
-                sourceRectanglesPutting[i] = new Rectangle(i * 64 + 23, 24, 16, 20);
+                sourceRectanglesPutting[i] = new Rectangle(i * 64 + 23, 24, 18, 20);
             }
         }
 
@@ -83,7 +83,7 @@ namespace GolfYou
             }
             else if (facing == 1 && isPutting || facing == 1 && wasPutting)
             {
-                _spriteBatch.Draw(puttingRightSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 32, 40), sourceRectanglesPutting[currentAnimationIndexPuttingRight], Color.White);
+                _spriteBatch.Draw(puttingRightSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 34, 40), sourceRectanglesPutting[currentAnimationIndexPuttingRight], Color.White);
             }
             else if (facing == 0 && movement < 0 && !isPutting && !wasPutting)
             {
@@ -95,7 +95,7 @@ namespace GolfYou
             }
             else if (facing == 0 && isPutting || facing == 0 && wasPutting)
             {
-                _spriteBatch.Draw(puttingLeftSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 32, 40), sourceRectanglesPutting[currentAnimationIndexPuttingLeft], Color.White);
+                _spriteBatch.Draw(puttingLeftSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 34, 40), sourceRectanglesPutting[currentAnimationIndexPuttingLeft], Color.White);
             }
 
         }
@@ -258,7 +258,7 @@ namespace GolfYou
                 wasPutting = true;
 
             }
-            else if (myKeyboard.HasBeenPressed(Keys.Space) && rolling == false && !isPutting)
+            else if (myKeyboard.HasBeenPressed(Keys.Space) && !rolling && !isPutting)
             {
                 isPutting = true;
 
