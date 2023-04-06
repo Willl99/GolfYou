@@ -9,7 +9,7 @@ namespace GolfYou
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 		Player myPlayer = new Player();
-
+		PlayerPhysics myPhysics = new PlayerPhysics();
 
 		public Game1()
 		{
@@ -40,6 +40,7 @@ namespace GolfYou
 			// TODO: Add your update logic here
 			myPlayer.playAnimation(gameTime);
 			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
+			myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPosition(), myPlayer.getMovement(), myPlayer.getWasPutting()));
 
 			base.Update(gameTime);
 		}
