@@ -30,6 +30,7 @@ namespace GolfYou
         private bool isPutting;
         private bool wasPutting;
         private bool spaceWasPressed;
+        private int hittingMode; // 0 = drive, 1 = putt
 
         private const float MoveAcceleration = 13000.0f;
         private const float MaxMoveSpeed = 1750.0f;
@@ -72,7 +73,6 @@ namespace GolfYou
 
         public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime)
         {
-            //Debug.WriteLine(currentAnimationIndexRun);
             if (facing == 1 && movement > 0 && !isPutting && !wasPutting)
             {
                 _spriteBatch.Draw(runRightSet, playerHitbox, sourceRectanglesRun[currentAnimationIndexRun], Color.White);
@@ -106,7 +106,6 @@ namespace GolfYou
                     if (currentAnimationIndexRun < 3)
                     {
                         currentAnimationIndexRun++;
-                        Debug.WriteLine(currentAnimationIndexRun.ToString());
                     }
                     else
                     {
@@ -167,6 +166,7 @@ namespace GolfYou
                     else
                     {
                         wasPutting = false;
+                        rolling = true;
                     }
                     timer = 0;
                 }
