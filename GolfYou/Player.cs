@@ -19,6 +19,9 @@ namespace GolfYou
         Rectangle[] sourceRectanglesPutting;
         Rectangle playerHitbox = new Rectangle(0, 200, 32, 32);
 
+        Vector2 origin;
+        float rotation;
+
         byte currentAnimationIndexRun;
         byte currentAnimationIndexPuttingRight;
         byte currentAnimationIndexPuttingLeft;
@@ -31,17 +34,6 @@ namespace GolfYou
         private bool wasPutting;
         private int hittingMode; // 0 = drive, 1 = tap
 
-        private const float MoveAcceleration = 13000.0f;
-        private const float MaxMoveSpeed = 1750.0f;
-        private const float GroundDragFactor = 0.48f;
-        private const float AirDragFactor = 0.58f;
-
-        private const float MaxJumpTime = .35f;
-        private const float GravityAcceleration = 3400.0f;
-        private const float JumpLaunchVelocity = -3500.0f;
-        private const float MaxFallSpeed = 550.0f;
-        private const float JumpControlPower = 0.14f;
-
         private const Buttons puttButton = Buttons.A;
 
         public void loadPlayerContent(ContentManager Content)
@@ -50,14 +42,18 @@ namespace GolfYou
             runLeftSet = Content.Load<Texture2D>("Sprites/Walkanim");
             puttingRightSet = Content.Load<Texture2D>("Sprites/PlayerPuttingAll");
             puttingLeftSet = Content.Load<Texture2D>("Sprites/PlayerPuttingAllFlipped");
+            head = Content.Load<Texture2D>("Sprites/Head");
 
             currentAnimationIndexRun = 0;
             currentAnimationIndexPuttingLeft = 5;
             currentAnimationIndexPuttingRight = 0;
-            rolling = false;
+            rotation = 0;
             timer = 0;
             threshold = 10;
+            rolling = false;
             isPutting = false;
+
+            origin = new Vector2(head.Width / 2f, head.Height / 2f);
 
             sourceRectanglesRun = new Rectangle[4];
             for (int i = 0; i < 4; i++)
@@ -71,13 +67,13 @@ namespace GolfYou
             }
         }
 
-        public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime)
+        public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime, Vector2 velocity)
         {
-            if (facing == 1 && movement > 0 && !isPutting && !wasPutting)
+            if (facing == 1 && movement > 0 && !isPutting && !wasPutting && !rolling)
             {
                 _spriteBatch.Draw(runRightSet, playerHitbox, sourceRectanglesRun[currentAnimationIndexRun], Color.White);
             }
-            else if (facing == 1 && movement == 0 && !isPutting && !wasPutting)
+            else if (facing == 1 && movement == 0 && !isPutting && !wasPutting && !rolling)
             {
                 _spriteBatch.Draw(runRightSet, playerHitbox, sourceRectanglesRun[1], Color.White);
             }
@@ -85,11 +81,11 @@ namespace GolfYou
             {
                 _spriteBatch.Draw(puttingRightSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 34, 40), sourceRectanglesPutting[currentAnimationIndexPuttingRight], Color.White);
             }
-            else if (facing == 0 && movement < 0 && !isPutting && !wasPutting)
+            else if (facing == 0 && movement < 0 && !isPutting && !wasPutting && !rolling)
             {
                 _spriteBatch.Draw(runLeftSet, playerHitbox, sourceRectanglesRun[currentAnimationIndexRun], Color.White);
             }
-            else if (facing == 0 && movement == 0 && !isPutting & !wasPutting)
+            else if (facing == 0 && movement == 0 && !isPutting & !wasPutting && !rolling)
             {
                 _spriteBatch.Draw(runLeftSet, playerHitbox, sourceRectanglesRun[0], Color.White);
             }
@@ -97,7 +93,11 @@ namespace GolfYou
             {
                 _spriteBatch.Draw(puttingLeftSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 34, 40), sourceRectanglesPutting[currentAnimationIndexPuttingLeft], Color.White);
             }
-
+            else if (rolling)
+            {
+                _spriteBatch.Draw(head, new Rectangle(playerHitbox.X + 12, playerHitbox.Y + 12, 26, 20), null, Color.White, rotation, origin, SpriteEffects.None, 0f);
+                rotation = -.1f * velocity.X;
+            }
         }
 
         public void playAnimation(GameTime gameTime)

@@ -50,7 +50,7 @@ namespace GolfYou
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 			_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 
-			myPlayer.drawPlayer(_spriteBatch, gameTime);
+			myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
 			// TODO: Add your drawing code here
 			_spriteBatch.End();
 			base.Draw(gameTime);

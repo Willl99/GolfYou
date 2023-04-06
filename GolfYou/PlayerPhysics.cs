@@ -33,6 +33,11 @@ namespace GolfYou
             IsOnGround = false;
         }
 
+        public Vector2 getVelocity()
+        {
+            return velocity;
+        }
+
         public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
