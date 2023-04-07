@@ -70,13 +70,13 @@ namespace GolfYou
             }
         }
 
-        public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime, Vector2 velocity) //Draws the player sprite depending on the action
+        public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime, Vector2 velocity) //Draws the player sprite depending on the action, most of these are self-explanatory 
         {
             if (facing == 1 && movement > 0 && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 _spriteBatch.Draw(runRightSet, playerHitbox, sourceRectanglesRun[currentAnimationIndexRun], Color.White);
             }
-            else if (facing == 1 && movement == 0 && !isPutting && !wasPutting && !rolling && !anglePutting)
+            else if (facing == 1 && movement == 0 && !isPutting && !wasPutting && !rolling && !anglePutting) //The 'idle' animation is just a frame from the running animation, since we have so few frames to work with
             {
                 _spriteBatch.Draw(runRightSet, playerHitbox, sourceRectanglesRun[1], Color.White);
             }
@@ -293,6 +293,8 @@ namespace GolfYou
 
 
         }
+
+        //Lots of getters down here to share info with HUD and Physics classes
 
         public bool getIsPutting()
         {

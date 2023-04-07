@@ -8,37 +8,28 @@ using System.Linq;
 
 namespace GolfYou
 {
-    public class PlayerPhysics
+    public class PlayerPhysics //Player physics class, much of this is lifted from my (Will's) Levels 1-3 implementations
     {
         private const float MoveAcceleration = 13000.0f;
         private const float MaxMoveSpeed = 1750.0f;
         private float GroundDragFactor = 0.48f;
         private const float AirDragFactor = 0.98f;
         private bool IsOnGround;
-        private float prevYVelocity = 0.0f;
         private bool prevWasPutting = false;
         private float timer = 0.0f;
         Vector2 velocity;
 
-        private const float MaxJumpTime = .35f;
-        private const float JumpLaunchVelocity = -3500.0f;
-        private const float GravityAcceleration = 3400.0f;
+        private const float GravityAcceleration = 3400.0f; //This will control how floating our game feels in the air, right now (at 3400), gravity feels a little strong to me (Will)
         private const float MaxFallSpeed = 550.0f;
-        private const float JumpControlPower = 0.14f;
 
-
-
-        public PlayerPhysics()
-        {
-            IsOnGround = false;
-        }
 
         public Vector2 getVelocity()
         {
             return velocity;
         }
 
-        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode, int velModifier, float angle)
+        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, 
+            Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode, int velModifier, float angle) //Main workhorse of this class, lots of paramters from player class, which is a little annoying
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -49,7 +40,7 @@ namespace GolfYou
             velocity.X += movement * MoveAcceleration * elapsed;
             velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
-            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode, velModifier, angle);
+            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode, velModifier, angle); //This controls the physics when the player is putting, both for a drive or a tap
 
             // Apply pseudo-drag horizontally.
             if (IsOnGround)
@@ -86,17 +77,17 @@ namespace GolfYou
             {
                 IsOnGround = false;
             }
-            prevYVelocity = velocity.Y;
             return playerPosition;
         }
-        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing, int hittingMode, int velModifier, float angle)
+        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing, int hittingMode, int velModifier, float angle) //Physics for post-putt and rolling
         {
-            int threshold = 3;
+            int threshold = 1; //This acts as a buffer of time between when a player 'hits' themselves with the golf club and when the physics actually take effect,
+                               //as the players X velocity is < 5 at the very beginning of the roll
             
             if (isRolling && timer > threshold)
             {
-                GroundDragFactor = .96f;
-                if (facing == 1 && velocity.X <= 5 || facing == 0 && velocity.X >= -5) 
+                GroundDragFactor = .96f; //Change the ground factor to have less friction when the player is rolling
+                if (facing == 1 && velocity.X <= 5 || facing == 0 && velocity.X >= -5) //If the player has come close to a stop, kick them out of a roll and reset the ground drag factor
                 { 
                     isRolling = false;
                     GroundDragFactor = .48f;
@@ -107,12 +98,12 @@ namespace GolfYou
             {
                 timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             }
-            if (prevWasPutting && !wasPutting && hittingMode == 0)
+            if (prevWasPutting && !wasPutting && hittingMode == 0) //These physics determine the players initial x and y velocity when they finish putting themselves
             {
                 if (facing == 1)
                 {
                     angle = angle * (float)(Math.PI / 180); //Need to convert to radians from degrees since thats what Math.Sin and Math.Cos use
-                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle);
+                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle); //These formulas are classic x and y componenet derivations, y = Length * sin(angle) and x = Length * cos(angle)
                     velocity.X = 25 * velModifier * (float)Math.Cos(angle);
                 }
                 else
@@ -124,7 +115,7 @@ namespace GolfYou
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);
             }
-            else if (prevWasPutting && !wasPutting && hittingMode == 1)
+            else if (prevWasPutting && !wasPutting && hittingMode == 1) //Much simpler physics for tapping, as there are no angles involved, might attach hurtbox to this action to differentiate it from driving more.
             {
                 if (facing == 1)
                 {
@@ -139,12 +130,9 @@ namespace GolfYou
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);
             }
-            else if (prevWasPutting && wasPutting || !prevWasPutting && !wasPutting || !prevWasPutting && wasPutting) { }
-            {
                 prevWasPutting = wasPutting;
                 return velocity;
 
-            }
 
 
 
