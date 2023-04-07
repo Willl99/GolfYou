@@ -7,7 +7,7 @@ using System;
 
 namespace GolfYou
 {
-    public class Player
+    public class Player //Player class to handle position, hitbox, input, and sprites
     {
         Texture2D runRightSet;
         Texture2D runLeftSet;
@@ -29,12 +29,11 @@ namespace GolfYou
         float timer;
         private float movement = 0.0f;
         private int facing = 1;
-        public bool rolling;
-        private bool isPutting;
-        private bool wasPutting;
-        private bool anglePutting;
+        public bool rolling; //Is the player rolling? This determines the drag factor when moving, rolling = less drag so momentum is carried farther
+        private bool isPutting; //Is the player putting?
+        private bool wasPutting; //Was the player just putting?
+        private bool anglePutting; //Angle the player chose for the current putt
         private int hittingMode; // 0 = drive, 1 = tap
-        private int velChoice;
 
         private const Buttons puttButton = Buttons.A;
 
@@ -71,7 +70,7 @@ namespace GolfYou
             }
         }
 
-        public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime, Vector2 velocity)
+        public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime, Vector2 velocity) //Draws the player sprite depending on the action
         {
             if (facing == 1 && movement > 0 && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
@@ -97,7 +96,7 @@ namespace GolfYou
             {
                 _spriteBatch.Draw(puttingLeftSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 34, 40), sourceRectanglesPutting[currentAnimationIndexPuttingLeft], Color.White);
             }
-            else if (rolling)
+            else if (rolling) //Head sprite is drawn with rotation tied to x velocity, the faster the player is going, the faster the rotation.
             {
                 _spriteBatch.Draw(head, new Rectangle(playerHitbox.X + 12, playerHitbox.Y + 12, 26, 20), null, Color.White, rotation, origin, SpriteEffects.None, 0f);
                 rotation = -.1f * velocity.X;
@@ -162,7 +161,7 @@ namespace GolfYou
                     timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 }
             }
-            else if (facing == 1 && wasPutting)
+            else if (facing == 1 && wasPutting) //This is the 'downswing' animation where the player is hitting themselves
             {
                 threshold = 15;
                 if (timer > threshold)
@@ -201,7 +200,7 @@ namespace GolfYou
                     timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 }
             }
-            else if (facing == 0 && wasPutting)
+            else if (facing == 0 && wasPutting) //This is the 'downswing' animation where the player is hitting themselves
             {
                 threshold = 15;
                 if (timer > threshold)
@@ -255,21 +254,21 @@ namespace GolfYou
             }
 
             // Check if the player wants to putt.
-            myKeyboard.GetState();
-            if (myKeyboard.HasBeenPressed(Keys.Space) && isPutting && !anglePutting)
+            myKeyboard.GetState(); //See below for an explanation on 'myKeboard'
+            if ((myKeyboard.HasBeenPressed(Keys.Space) && isPutting && !anglePutting)) //The order of these statements matters, its probably slightly spaghetti, but it does work.
             {
                 isPutting = false;
                 wasPutting = true;
 
             }
-            if (myKeyboard.HasBeenPressed(Keys.Space) && anglePutting) 
+            else if (myKeyboard.HasBeenPressed(Keys.Space) && anglePutting && hittingMode == 0|| myKeyboard.HasBeenPressed(Keys.Space) && hittingMode == 1 && !isPutting) 
             {
                 anglePutting = false;
                 isPutting = true;
                 
             }
 
-            if (myKeyboard.HasBeenPressed(Keys.Space) && !rolling && !isPutting && !anglePutting && !wasPutting)
+            else if (myKeyboard.HasBeenPressed(Keys.Space) && !rolling && !isPutting && !anglePutting && !wasPutting && hittingMode == 0)
             {
                 anglePutting = true;
 
@@ -279,6 +278,7 @@ namespace GolfYou
             {
                 isPutting = false;
                 wasPutting = false;
+                anglePutting= false;
                 currentAnimationIndexPuttingRight = 0;
                 currentAnimationIndexPuttingLeft = 5;
             }
@@ -335,19 +335,20 @@ namespace GolfYou
             return anglePutting;
         }
 
-        public class myKeyboard
+        public class myKeyboard // This is a very simple class to ensure that actions are only carried out once per key hit, otherwise putting actions would happen for as long as the space bar was held down
         {
             static KeyboardState currentKeyState;
             static KeyboardState previousKeyState;
 
-            public static KeyboardState GetState()
+            public static KeyboardState GetState() //Get state from directly from the XNA framework
             {
                 previousKeyState = currentKeyState;
                 currentKeyState = Microsoft.Xna.Framework.Input.Keyboard.GetState();
                 return currentKeyState;
             }
 
-            public static bool HasBeenPressed(Keys key)
+            public static bool HasBeenPressed(Keys key) //If a key is currently pressed and wasn't pressed on the tick before, then send true, else its false,
+                                                        //so if its held down, then IsKeyDown on the tick before and current are both true and thus it will return false
             {
                 return currentKeyState.IsKeyDown(key) && !previousKeyState.IsKeyDown(key);
             }

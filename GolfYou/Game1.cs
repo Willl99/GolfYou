@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GolfYou
 {
-	public class Game1 : Game
+	public class Game1 : Game 
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
