@@ -32,6 +32,7 @@ namespace GolfYou
         public bool rolling;
         private bool isPutting;
         private bool wasPutting;
+        private bool anglePutting;
         private int hittingMode; // 0 = drive, 1 = tap
         private int velChoice;
 
@@ -72,27 +73,27 @@ namespace GolfYou
 
         public void drawPlayer(SpriteBatch _spriteBatch, GameTime gameTime, Vector2 velocity)
         {
-            if (facing == 1 && movement > 0 && !isPutting && !wasPutting && !rolling)
+            if (facing == 1 && movement > 0 && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 _spriteBatch.Draw(runRightSet, playerHitbox, sourceRectanglesRun[currentAnimationIndexRun], Color.White);
             }
-            else if (facing == 1 && movement == 0 && !isPutting && !wasPutting && !rolling)
+            else if (facing == 1 && movement == 0 && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 _spriteBatch.Draw(runRightSet, playerHitbox, sourceRectanglesRun[1], Color.White);
             }
-            else if (facing == 1 && isPutting || facing == 1 && wasPutting)
+            else if (facing == 1 && isPutting || facing == 1 && wasPutting || facing == 1 && anglePutting)
             {
                 _spriteBatch.Draw(puttingRightSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 34, 40), sourceRectanglesPutting[currentAnimationIndexPuttingRight], Color.White);
             }
-            else if (facing == 0 && movement < 0 && !isPutting && !wasPutting && !rolling)
+            else if (facing == 0 && movement < 0 && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 _spriteBatch.Draw(runLeftSet, playerHitbox, sourceRectanglesRun[currentAnimationIndexRun], Color.White);
             }
-            else if (facing == 0 && movement == 0 && !isPutting & !wasPutting && !rolling)
+            else if (facing == 0 && movement == 0 && !isPutting & !wasPutting && !rolling && !anglePutting)
             {
                 _spriteBatch.Draw(runLeftSet, playerHitbox, sourceRectanglesRun[0], Color.White);
             }
-            else if (facing == 0 && isPutting || facing == 0 && wasPutting)
+            else if (facing == 0 && isPutting || facing == 0 && wasPutting || facing == 0 && anglePutting)
             {
                 _spriteBatch.Draw(puttingLeftSet, new Rectangle(playerHitbox.X, playerHitbox.Y, 34, 40), sourceRectanglesPutting[currentAnimationIndexPuttingLeft], Color.White);
             }
@@ -145,7 +146,7 @@ namespace GolfYou
                     timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 }
             }
-            else if (facing == 1 && isPutting)
+            else if (facing == 1 && (isPutting || anglePutting))
             {
                 threshold = 100;
                 if (timer > threshold)
@@ -184,7 +185,7 @@ namespace GolfYou
 
 
             }
-            else if (facing == 0 && isPutting)
+            else if (facing == 0 && (isPutting || anglePutting))
             {
                 threshold = 100;
                 if (timer > threshold)
@@ -255,15 +256,22 @@ namespace GolfYou
 
             // Check if the player wants to putt.
             myKeyboard.GetState();
-            if (myKeyboard.HasBeenPressed(Keys.Space) && isPutting)
+            if (myKeyboard.HasBeenPressed(Keys.Space) && isPutting && !anglePutting)
             {
                 isPutting = false;
                 wasPutting = true;
 
             }
-            else if (myKeyboard.HasBeenPressed(Keys.Space) && !rolling && !isPutting)
+            if (myKeyboard.HasBeenPressed(Keys.Space) && anglePutting) 
             {
+                anglePutting = false;
                 isPutting = true;
+                
+            }
+
+            if (myKeyboard.HasBeenPressed(Keys.Space) && !rolling && !isPutting && !anglePutting && !wasPutting)
+            {
+                anglePutting = true;
 
             }
 
@@ -320,6 +328,11 @@ namespace GolfYou
         public int getHittingMode()
         {
             return hittingMode;
+        }
+
+        public bool getAnglePutting()
+        {
+            return anglePutting;
         }
 
         public class myKeyboard

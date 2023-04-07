@@ -38,7 +38,7 @@ namespace GolfYou
             return velocity;
         }
 
-        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode, int velModifier)
+        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode, int velModifier, float angle)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -49,7 +49,7 @@ namespace GolfYou
             velocity.X += movement * MoveAcceleration * elapsed;
             velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
-            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode, velModifier);
+            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode, velModifier, angle);
 
             // Apply pseudo-drag horizontally.
             if (IsOnGround)
@@ -89,7 +89,7 @@ namespace GolfYou
             prevYVelocity = velocity.Y;
             return playerPosition;
         }
-        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing, int hittingMode, int velModifier)
+        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing, int hittingMode, int velModifier, float angle)
         {
             int threshold = 3;
             
@@ -111,9 +111,9 @@ namespace GolfYou
             {
                 if (facing == 1)
                 {
-                    velocity.Y = -12.5f * velModifier;
-                    velocity.X = 25 * velModifier;
-                    Debug.WriteLine(velModifier);
+                    angle = angle * (float)(Math.PI / 180); //Need to convert to radians from degrees since thats what Math.Sin and Math.Cos use
+                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle);
+                    velocity.X = 25 * velModifier * (float)Math.Cos(angle);
                 }
                 else
                 {
