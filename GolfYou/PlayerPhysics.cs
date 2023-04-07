@@ -117,8 +117,9 @@ namespace GolfYou
                 }
                 else
                 {
-                    velocity.Y = -12.5f * velModifier;
-                    velocity.X = -25 * velModifier;
+                    angle = angle * (float)(Math.PI / 180); //Need to convert to radians from degrees since thats what Math.Sin and Math.Cos use
+                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle);
+                    velocity.X = -25 * velModifier * (float)Math.Cos(angle);
                 }
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);
