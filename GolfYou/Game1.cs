@@ -42,7 +42,10 @@ namespace GolfYou
 			// TODO: Add your update logic here
 			myPlayer.playAnimation(gameTime);
 			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
-			myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPosition(), myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode()));
+            myHUD.playHudAnimations(gameTime, myPlayer.getIsPutting(), myPlayer.rolling);
+            myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPosition(), myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier()));
+
+
 
 			base.Update(gameTime);
 		}
@@ -53,7 +56,7 @@ namespace GolfYou
 			_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 
 			myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
-			myHUD.drawHudContent(_spriteBatch, myPlayer.getHittingMode());
+			myHUD.drawHudContent(_spriteBatch, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition());
 			// TODO: Add your drawing code here
 			_spriteBatch.End();
 			base.Draw(gameTime);

@@ -38,7 +38,7 @@ namespace GolfYou
             return velocity;
         }
 
-        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode)
+        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode, int velModifier)
         {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -49,7 +49,7 @@ namespace GolfYou
             velocity.X += movement * MoveAcceleration * elapsed;
             velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
-            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode);
+            velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode, velModifier);
 
             // Apply pseudo-drag horizontally.
             if (IsOnGround)
@@ -89,7 +89,7 @@ namespace GolfYou
             prevYVelocity = velocity.Y;
             return playerPosition;
         }
-        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing, int hittingMode)
+        private Vector2 DoDrive(Vector2 velocity, GameTime gameTime, ref bool isRolling, bool wasPutting, int facing, int hittingMode, int velModifier)
         {
             int threshold = 3;
             
@@ -111,13 +111,14 @@ namespace GolfYou
             {
                 if (facing == 1)
                 {
-                    velocity.Y = -1000;
-                    velocity.X = 2000;
+                    velocity.Y = -12.5f * velModifier;
+                    velocity.X = 25 * velModifier;
+                    Debug.WriteLine(velModifier);
                 }
                 else
                 {
-                    velocity.Y = -1000;
-                    velocity.X = -2000;
+                    velocity.Y = -12.5f * velModifier;
+                    velocity.X = -25 * velModifier;
                 }
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);
@@ -127,12 +128,12 @@ namespace GolfYou
                 if (facing == 1)
                 {
                     velocity.Y = 0;
-                    velocity.X = 2000;
+                    velocity.X = 25 * velModifier;
                 }
                 else
                 {
                     velocity.Y = 0;
-                    velocity.X = -2000;
+                    velocity.X = -25 * velModifier;
                 }
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);

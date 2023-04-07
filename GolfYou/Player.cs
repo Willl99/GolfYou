@@ -33,6 +33,7 @@ namespace GolfYou
         private bool isPutting;
         private bool wasPutting;
         private int hittingMode; // 0 = drive, 1 = tap
+        private int velChoice;
 
         private const Buttons puttButton = Buttons.A;
 
@@ -283,6 +284,11 @@ namespace GolfYou
             playerHitbox.X += (int)movement;
 
 
+        }
+
+        public bool getIsPutting()
+        {
+            return isPutting; 
         }
 
         public Vector2 getPosition()
