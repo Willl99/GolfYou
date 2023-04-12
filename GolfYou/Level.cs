@@ -13,12 +13,14 @@ namespace GolfYou
         public int width;
         public int length;
         public List<Vector2> coordinates;
+        public bool sidescroller;
 
-        public Level(string name)
+        public Level(string name, bool side_scroller=false)
         {
             TextReader reader = File.OpenText(name);
 
             coordinates = new List<Vector2>();
+            sidescroller = side_scroller;
 
             layout = new List<char>();
             string readline = reader.ReadLine();
