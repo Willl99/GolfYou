@@ -133,69 +133,6 @@ namespace GolfYou
                 }
             }
         }
-        /*public Vector2 ApplyTileCollision(GameTime gameTime, Rectangle player)
-        {
-
-            foreach (var obj in collisionLayer.objects)
-            {
-                var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
-                Debug.WriteLine("Player.Bottom: " + player.Bottom);
-                
-                if (player.Intersects(objRect))
-                {
-                    Debug.WriteLine("objRect.Top: " + objRect.Top);
-                    player.Y = MathHelper.Clamp(player.Y, 0, objRect.Top + -30);
-
-                }
-                /*else if (player.Top == objRect.Bottom && playerPosition.X + 120 > objRect.Left && playerPosition.X + 120 < objRect.Right)
-                {
-                    playerPosition.Y = MathHelper.Clamp(playerPosition.Y, objRect.Bottom - 85, Window.ClientBounds.Height);
-
-                }
-                else if (playerPosition.Y >= objRect.Top - 160 && playerPosition.Y <= objRect.Bottom - 80 && playerPosition.X + 120 <= objRect.Left)
-                {
-                    playerPosition.X = MathHelper.Clamp(playerPosition.X, -120, objRect.Left - 130);
-
-                }
-                else if (playerPosition.Y >= objRect.Top - 160 && playerPosition.Y <= objRect.Bottom - 80 && playerPosition.X + 120 >= objRect.Right)
-                {
-                    playerPosition.X = MathHelper.Clamp(playerPosition.X, objRect.Right - 110, Window.ClientBounds.Width + 120);
-
-                }
-
-                if (boxPosition.Y <= objRect.Top - 32 && boxPosition.X + 50 > objRect.Left - 10 && boxPosition.X + 50 < objRect.Right + 10)
-                {
-                    boxPosition.Y = MathHelper.Clamp(boxPosition.Y, -160, objRect.Top - 45);
-                    if (boxPosition.Y == objRect.Top - 45) { boxYVel = 0; }
-
-                }
-                else if (boxPosition.Y >= objRect.Bottom - 32 && boxPosition.X + 50 > objRect.Left && boxPosition.X + 50 < objRect.Right)
-                {
-                    boxPosition.Y = MathHelper.Clamp(boxPosition.Y, objRect.Bottom - 35, Window.ClientBounds.Height);
-
-                }
-                else if (boxPosition.Y >= objRect.Top - 160 && boxPosition.Y <= objRect.Bottom - 80 && boxPosition.X + 120 <= objRect.Left)
-                {
-                    boxPosition.X = MathHelper.Clamp(boxPosition.X, -120, objRect.Left - 130);
-
-                }
-                else if (boxPosition.Y >= objRect.Top - 160 && boxPosition.Y <= objRect.Bottom - 80 && boxPosition.X + 120 >= objRect.Right)
-                {
-                    boxPosition.X = MathHelper.Clamp(boxPosition.X, objRect.Right - 110, Window.ClientBounds.Width + 120);
-
-                } 
-
-            }
-            var endobj = endLayer.objects.First(l => l.name == "EndSquare");
-            var endWindow = new Rectangle((int)endobj.x, (int)endobj.y, (int)endobj.width, (int)endobj.height);
-            if (player.Y > endWindow.Top && player.Y< endWindow.Bottom && player.X > endWindow.Left && player.X < endWindow.Right)
-            {
-                Debug.WriteLine("Got to end!");
-            } 
-
-            return new Vector2(player.X, player.Y);
-
-        } */
 
         public TiledLayer getCollisionLayer()
         {
@@ -206,6 +143,16 @@ namespace GolfYou
         {
             var startobj = endLayer.objects.First(l => l.name == "BeginSquare");
             return new Vector2(startobj.x, startobj.y);
+        }
+
+        public void endCurLevel(Rectangle player)
+        {
+            var endObj = endLayer.objects.First(l => l.name == "EndSquare");
+            var objRect = new Rectangle((int)endObj.x, (int)endObj.y, (int)endObj.width, (int)endObj.height);
+            if (player.Intersects(objRect))
+            {
+                Game1.levelEnd = true;
+            }
         }
 
         public Vector2 getMapBounds()
