@@ -12,7 +12,9 @@ using TiledCS;
 
 namespace GolfYou
 {
-    public class Level
+    public class Level //NOTE THAT IF YOU MAKE A LEVEL, THE LEVEL NEEDS A COLLISION LAYER, AND A LAYER TITLED "StartEnd", Collision layer handles collision, and startEnd
+                       //has two objects tied to it, the BeginSquare and the EndSquare, the former is where the player spawns in a level, the latter is where the player goes to end the level,
+                       //If the level does not have ALL of these, it will not function. Make sure to load any new tilesets too.
     {
         private TiledMap map;
         private Dictionary<int, TiledTileset> tilesets;
@@ -145,7 +147,7 @@ namespace GolfYou
             return new Vector2(startobj.x, startobj.y);
         }
 
-        public void endCurLevel(Rectangle player)
+        public void endCurLevel(Rectangle player) //This is the logic to end the current level and load the next one, if the player's hitbox touches the EndSquare hitbox, then the current level ends, and the next is loaded
         {
             var endObj = endLayer.objects.First(l => l.name == "EndSquare");
             var objRect = new Rectangle((int)endObj.x, (int)endObj.y, (int)endObj.width, (int)endObj.height);
