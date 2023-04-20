@@ -133,15 +133,18 @@ namespace GolfYou
                 }
             }
         }
-        public void ApplyTileCollision(GameTime gameTime, Rectangle player)
+        /*public Vector2 ApplyTileCollision(GameTime gameTime, Rectangle player)
         {
 
             foreach (var obj in collisionLayer.objects)
             {
                 var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
+                Debug.WriteLine("Player.Bottom: " + player.Bottom);
+                
                 if (player.Intersects(objRect))
                 {
-                    player.Y = MathHelper.Clamp(player.Y, 0, objRect.Y);
+                    Debug.WriteLine("objRect.Top: " + objRect.Top);
+                    player.Y = MathHelper.Clamp(player.Y, 0, objRect.Top + -30);
 
                 }
                 /*else if (player.Top == objRect.Bottom && playerPosition.X + 120 > objRect.Left && playerPosition.X + 120 < objRect.Right)
@@ -180,7 +183,7 @@ namespace GolfYou
                 {
                     boxPosition.X = MathHelper.Clamp(boxPosition.X, objRect.Right - 110, Window.ClientBounds.Width + 120);
 
-                } */
+                } 
 
             }
             var endobj = endLayer.objects.First(l => l.name == "EndSquare");
@@ -190,7 +193,13 @@ namespace GolfYou
                 Debug.WriteLine("Got to end!");
             } 
 
+            return new Vector2(player.X, player.Y);
 
+        } */
+
+        public TiledLayer getCollisionLayer()
+        {
+            return collisionLayer;
         }
 
         public Vector2 getPlayerSpawnLocation()
@@ -201,7 +210,6 @@ namespace GolfYou
 
         public Vector2 getMapBounds()
         {
-            Debug.WriteLine(map.Height * 32 - 240);
             return new Vector2(map.Width * 32, map.Height * 32);
         }
 
