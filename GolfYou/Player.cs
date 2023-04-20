@@ -337,6 +337,17 @@ namespace GolfYou
             return anglePutting;
         }
 
+        public Rectangle getPlayerHitbox()
+        {
+            return playerHitbox;
+        }
+
+        public void setSpawnLocation(Vector2 spawnCoords)
+        {
+            playerHitbox.X = (int)spawnCoords.X;
+            playerHitbox.Y = (int)spawnCoords.Y;
+        }
+
         public class myKeyboard // This is a very simple class to ensure that actions are only carried out once per key hit, otherwise putting actions would happen for as long as the space bar was held down
         {
             static KeyboardState currentKeyState;

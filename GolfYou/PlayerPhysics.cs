@@ -56,8 +56,8 @@ namespace GolfYou
             playerPosition = new Vector2((float)Math.Round(playerPosition.X), (float)Math.Round(playerPosition.Y));
 
             // If the player is now colliding with the level, separate them.
-            playerPosition.X = MathHelper.Clamp(playerPosition.X, 0, windowWidth - 60);
-            playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, windowHeight - 100);
+            //playerPosition.X = MathHelper.Clamp(playerPosition.X, 0, windowWidth - 60);
+            playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, windowHeight);
             //HandleCollisions();
 
             // If the collision stopped us from moving, reset the velocity to zero.
@@ -103,13 +103,13 @@ namespace GolfYou
                 if (facing == 1)
                 {
                     angle = angle * (float)(Math.PI / 180); //Need to convert to radians from degrees since thats what Math.Sin and Math.Cos use
-                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle); //These formulas are classic x and y componenet derivations, y = Length * sin(angle) and x = Length * cos(angle)
+                    velocity.Y = (-24.5f * velModifier) * (float)Math.Sin(angle); //These formulas are classic x and y componenet derivations, y = Length * sin(angle) and x = Length * cos(angle)
                     velocity.X = 25 * velModifier * (float)Math.Cos(angle);
                 }
                 else
                 {
                     angle = angle * (float)(Math.PI / 180); //Need to convert to radians from degrees since thats what Math.Sin and Math.Cos use
-                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle);
+                    velocity.Y = (-24.5f * velModifier) * (float)Math.Sin(angle);
                     velocity.X = -25 * velModifier * (float)Math.Cos(angle);
                 }
                 prevWasPutting = wasPutting;
