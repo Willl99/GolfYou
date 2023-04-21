@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:Levels/LevelMaterials/Decorations (32x32).png
 
+#begin Levels/LevelMaterials/GUI.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Levels/LevelMaterials/GUI.png
+
 #begin Levels/LevelMaterials/Terrain (32x32).png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -49,18 +61,6 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Arrow.png
 
-#begin Sprites/Arrow.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Arrow.png
-
 #begin Sprites/Bars/BarAll.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -72,18 +72,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Bars/BarAll.png
-
-#begin Sprites/ClubOptions.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/ClubOptions.png
 
 #begin Sprites/ClubOptions.png
 /importer:TextureImporter
@@ -145,18 +133,6 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Head.png
 
-#begin Sprites/Head.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Head.png
-
 #begin Sprites/PlayerPuttingAll.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -168,30 +144,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/PlayerPuttingAll.png
-
-#begin Sprites/PlayerPuttingAll.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/PlayerPuttingAll.png
-
-#begin Sprites/PlayerPuttingAllFlipped.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/PlayerPuttingAllFlipped.png
 
 #begin Sprites/PlayerPuttingAllFlipped.png
 /importer:TextureImporter
@@ -288,30 +240,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Walkanim.png
-
-#begin Sprites/Walkanim.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Walkanim.png
-
-#begin Sprites/WalkanimFlipped.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/WalkanimFlipped.png
 
 #begin Sprites/WalkanimFlipped.png
 /importer:TextureImporter
