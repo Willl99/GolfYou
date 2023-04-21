@@ -16,6 +16,7 @@ namespace GolfYou
                        //has two objects tied to it, the BeginSquare and the EndSquare, the former is where the player spawns in a level, the latter is where the player goes to end the level,
                        //If the level does not have ALL of these, it will not function. Make sure to load any new tilesets too.
     {
+
         private TiledMap map;
         private Dictionary<int, TiledTileset> tilesets;
         private Texture2D tilesetTexture;
