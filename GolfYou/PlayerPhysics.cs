@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using System;
 using System.Linq;
+using TiledCS;
 
 namespace GolfYou
 {
@@ -28,9 +29,10 @@ namespace GolfYou
             return velocity;
         }
 
-        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling, 
-            Vector2 playerPosition, float movement, bool wasPutting, int facing, int hittingMode, int velModifier, float angle) //Main workhorse of this class, lots of paramters from player class, which is a little annoying
+        public Vector2 ApplyPhysics(GameTime gameTime, int windowHeight, int windowWidth, ref bool isRolling,
+            Rectangle player, float movement, bool wasPutting, int facing, int hittingMode, int velModifier, float angle, TiledLayer collisionLayer) //Main workhorse of this class, lots of paramters from player class, which is a little annoying
         {
+            Vector2 playerPosition = new Vector2(player.X, player.Y);
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Vector2 previousPosition = playerPosition;
@@ -43,7 +45,7 @@ namespace GolfYou
             velocity = DoDrive(velocity, gameTime, ref isRolling, wasPutting, facing, hittingMode, velModifier, angle); //This controls the physics when the player is putting, both for a drive or a tap
 
             // Apply pseudo-drag horizontally.
-            if (IsOnGround)
+            if (IsOnGround || !isRolling)
                 velocity.X *= GroundDragFactor;
             else
                 velocity.X *= AirDragFactor;
@@ -56,9 +58,11 @@ namespace GolfYou
             playerPosition = new Vector2((float)Math.Round(playerPosition.X), (float)Math.Round(playerPosition.Y));
 
             // If the player is now colliding with the level, separate them.
-            playerPosition.X = MathHelper.Clamp(playerPosition.X, 0, windowWidth - 60);
-            playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, windowHeight - 100);
-            //HandleCollisions();
+            //playerPosition.X = MathHelper.Clamp(playerPosition.X, 0, windowWidth - 60);
+            //playerPosition.Y = MathHelper.Clamp(playerPosition.Y, 0, windowHeight);
+            player.X = (int)playerPosition.X;
+            player.Y = (int)playerPosition.Y;
+            playerPosition = HandleCollisions(gameTime, player, collisionLayer);
 
             // If the collision stopped us from moving, reset the velocity to zero.
             if (playerPosition.X == previousPosition.X)
@@ -83,18 +87,18 @@ namespace GolfYou
         {
             int threshold = 1; //This acts as a buffer of time between when a player 'hits' themselves with the golf club and when the physics actually take effect,
                                //as the players X velocity is < 5 at the very beginning of the roll
-            
+
             if (isRolling && timer > threshold)
             {
                 GroundDragFactor = .96f; //Change the ground factor to have less friction when the player is rolling
                 if (facing == 1 && velocity.X <= 5 || facing == 0 && velocity.X >= -5) //If the player has come close to a stop, kick them out of a roll and reset the ground drag factor
-                { 
+                {
                     isRolling = false;
                     GroundDragFactor = .48f;
                     timer = 0;
                 }
             }
-            else if (isRolling && timer < threshold) 
+            else if (isRolling && timer < threshold)
             {
                 timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             }
@@ -103,14 +107,14 @@ namespace GolfYou
                 if (facing == 1)
                 {
                     angle = angle * (float)(Math.PI / 180); //Need to convert to radians from degrees since thats what Math.Sin and Math.Cos use
-                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle); //These formulas are classic x and y componenet derivations, y = Length * sin(angle) and x = Length * cos(angle)
-                    velocity.X = 25 * velModifier * (float)Math.Cos(angle);
+                    velocity.Y = (-50f * velModifier) * (float)Math.Sin(angle); //These formulas are classic x and y componenet derivations, y = Length * sin(angle) and x = Length * cos(angle)
+                    velocity.X = 50 * velModifier * (float)Math.Cos(angle);
                 }
                 else
                 {
                     angle = angle * (float)(Math.PI / 180); //Need to convert to radians from degrees since thats what Math.Sin and Math.Cos use
-                    velocity.Y = (-12.5f * velModifier) * (float)Math.Sin(angle);
-                    velocity.X = -25 * velModifier * (float)Math.Cos(angle);
+                    velocity.Y = (-50f * velModifier) * (float)Math.Sin(angle);
+                    velocity.X = -50 * velModifier * (float)Math.Cos(angle);
                 }
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);
@@ -130,13 +134,49 @@ namespace GolfYou
                 prevWasPutting = wasPutting;
                 return new Vector2(velocity.X, velocity.Y);
             }
-                prevWasPutting = wasPutting;
-                return velocity;
+            prevWasPutting = wasPutting;
+            return velocity;
 
 
 
 
 
         }
+        public Vector2 HandleCollisions(GameTime gameTime, Rectangle player, TiledLayer collisionLayer)
+        {
+
+            foreach (var obj in collisionLayer.objects)
+            {
+                var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
+                bool intersectTop = player.Bottom - objRect.Top < 20 && player.X > objRect.Left && player.X < objRect.Right;
+                bool intersectBottom = objRect.Bottom - player.Top < 30 && player.X > objRect.Left && player.X < objRect.Right;
+                bool intersectLeft = player.Right - objRect.Left < 20 && player.Y < objRect.Bottom && player.Y > objRect.Top;
+                bool intersectRight = objRect.Right - player.Left < 20 && player.Y < objRect.Bottom && player.Y > objRect.Top;
+                
+                if (intersectTop)
+                {
+
+                    player.Y = MathHelper.Clamp(player.Y, 0, objRect.Top - 32);
+
+                }
+                else if (intersectBottom) 
+                {
+                    player.Y = MathHelper.Clamp(player.Y, objRect.Bottom, 1000000);
+
+                } 
+                
+                if (intersectLeft) 
+                {
+                    player.X = MathHelper.Clamp(player.X, 0, objRect.Left - 32);
+                }
+                else if(intersectRight)
+                {
+                    player.X = MathHelper.Clamp(player.X, objRect.Right, 10000);
+                }
+            }
+            return new Vector2(player.X, player.Y);
+        }
+
     }
-}
+
+    }
