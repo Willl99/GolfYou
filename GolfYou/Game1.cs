@@ -18,6 +18,8 @@ namespace GolfYou
 		private HUD myHUD = new HUD();
 		private Level levelManager = new Level();
 		private Camera myCamera = new Camera();
+		private Menu myMenu = new Menu();
+
 		private string[] levels = {"GolfYouScrollingTest.tmx", "LevelTwoTest.tmx"};
 		int levelCounter = 0;
 
@@ -28,10 +30,9 @@ namespace GolfYou
 		public static bool loadMainMenu;
 		public static bool startMenu;
 		public static bool startButtonPressed;
-		private Microsoft.Xna.Framework.Rectangle startMenuHitbox = new Microsoft.Xna.Framework.Rectangle(360, 200, 27, 16);
-        private Microsoft.Xna.Framework.Rectangle exitToStartMenuHitbox = new Microsoft.Xna.Framework.Rectangle(370, 250, 22, 11);
-        private Texture2D pixel;
-		private Texture2D font;
+		public static bool loadControlMenu;
+		public static bool controlButtonPressed;
+
 
 		public Game1()
 		{
@@ -50,14 +51,13 @@ namespace GolfYou
 		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
-            startMenuSprites = Content.Load<Texture2D>("Levels/LevelMaterials/GUI");
+			myMenu.loadMenus(this.Content);
 			myPlayer.loadPlayerContent(this.Content);
 			myHUD.loadHudContent(this.Content);
-            pixel = new Texture2D(GraphicsDevice, 1, 1);
-            pixel.SetData<Microsoft.Xna.Framework.Color>(new Microsoft.Xna.Framework.Color[] { Microsoft.Xna.Framework.Color.White });
 			startButtonPressed = false;
 			loadMainMenu = false;
 			startMenu = false;
+			controlButtonPressed = false;
 
     }
 
@@ -69,13 +69,34 @@ namespace GolfYou
             // TODO: Add your update logic here
 			
             MouseState mouseState = Mouse.GetState();
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-				// Check for intersection
-                if (startMenuHitbox.Contains(mouseState.X, mouseState.Y))
+			if(startMenu)
+			{
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-					startButtonPressed = true;
+                    // Check for intersection
+                    if (myMenu.didPressStart(mouseState))
+                    {
+                        startButtonPressed = true;
 
+                    }
+                    if (myMenu.didPressControls(mouseState))
+                    {
+                        controlButtonPressed = true;
+                        startMenu = false;
+                    }
+                }
+            }
+            
+
+			if(controlButtonPressed)
+			{
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (myMenu.controlDidPressExitToStart(mouseState))
+                    {
+						controlButtonPressed = false;
+                        startMenu = true;
+                    }
                 }
             }
 
@@ -101,13 +122,15 @@ namespace GolfYou
 			{
 				if (mouseState.LeftButton == ButtonState.Pressed)
 				{
-					if (exitToStartMenuHitbox.Contains(mouseState.X, mouseState.Y))
+					if (myMenu.didPressExitToStart(mouseState))
 					{
 						levelEnd = false;
+						controlButtonPressed = false;
 						startMenu = true;
 					}
 				}
 			}
+
 			/*
 			if (levelEnd)
 			{
@@ -132,36 +155,32 @@ namespace GolfYou
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
-			_spriteBatch.Begin();
+			
             if(startMenu)
 			{
-                // Draw the text to the screen
-                _spriteBatch.Draw(startMenuSprites, new Vector2(350, 150), new Microsoft.Xna.Framework.Rectangle(146, 66, 46, 13), Microsoft.Xna.Framework.Color.White);
-                _spriteBatch.Draw(startMenuSprites, new Vector2(360, 200), new Microsoft.Xna.Framework.Rectangle(67, 148, 27, 16), Microsoft.Xna.Framework.Color.White);
-				
+                _spriteBatch.Begin();
+				myMenu.drawStartMenu(_spriteBatch);
             }
             if (startButtonPressed)
             {
+                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: myCamera.Transform);
                 levelManager.drawLevel(_spriteBatch);
                 myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
                 myHUD.drawHudContent(_spriteBatch, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition(), myPlayer.getAnglePutting(), myPlayer.getFacing());
 
+
             }
+			if (controlButtonPressed)
+			{
+				_spriteBatch.Begin();
+				myMenu.drawControlMenu(_spriteBatch);
+			}
 
 			if(levelEnd)
 			{
-                _spriteBatch.Draw(startMenuSprites, new Vector2(360, 150), new Microsoft.Xna.Framework.Rectangle(145, 113, 47, 15), Microsoft.Xna.Framework.Color.White);
-                _spriteBatch.Draw(startMenuSprites, new Vector2(380, 200), new Microsoft.Xna.Framework.Rectangle(114, 114, 31, 15), Microsoft.Xna.Framework.Color.White);
-				_spriteBatch.Draw(startMenuSprites, new Vector2(370, 250), new Microsoft.Xna.Framework.Rectangle(7, 164, 22, 11), Microsoft.Xna.Framework.Color.White);
+                _spriteBatch.Begin();
+				myMenu.drawLevelEndMenu(_spriteBatch);
             }
-
-
-
-            /*
-            levelManager.drawLevel(_spriteBatch);
-            myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
-            myHUD.drawHudContent(_spriteBatch, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition(), myPlayer.getAnglePutting(), myPlayer.getFacing());
-			*/
 
             _spriteBatch.End();
 			

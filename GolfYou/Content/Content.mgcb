@@ -49,6 +49,13 @@
 /processorParam:TextureFormat=Color
 /build:Levels/LevelMaterials/Terrain (32x32).png
 
+#begin MenuText.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:MenuText.spritefont
+
 #begin Sprites/Arrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
