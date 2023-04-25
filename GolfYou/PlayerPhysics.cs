@@ -148,10 +148,10 @@ namespace GolfYou
             foreach (var obj in collisionLayer.objects)
             {
                 var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
-                bool intersectTop = player.Bottom - objRect.Top < 20 && player.X > objRect.Left && player.X < objRect.Right;
-                bool intersectBottom = objRect.Bottom - player.Top < 20 && player.X > objRect.Left && player.X < objRect.Right;
-                bool intersectLeft = player.Right - objRect.Left < 20 && player.Y < objRect.Bottom && player.Y > objRect.Top;
-                bool intersectRight = objRect.Right - player.Left < 20 && player.Y < objRect.Bottom && player.Y > objRect.Top;
+                bool intersectTop = player.Bottom - objRect.Top < 30 && player.X >= objRect.Left - 22 && player.X <= objRect.Right;
+                bool intersectBottom = objRect.Bottom - player.Top < 30 && player.X >= objRect.Left && player.X <= objRect.Right;
+                bool intersectLeft = player.Right - objRect.Left < 30 && player.Y <= objRect.Bottom && player.Y >= objRect.Top;
+                bool intersectRight = objRect.Right - player.Left < 30 && player.Y <= objRect.Bottom && player.Y >= objRect.Top;
                 
                 if (intersectTop)
                 {

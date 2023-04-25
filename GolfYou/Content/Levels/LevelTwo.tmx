@@ -57,8 +57,8 @@
   <object id="1" x="0" y="-31.6126" width="31.7755" height="669.67"/>
   <object id="2" x="0.303067" y="608" width="1311.94" height="31.4545"/>
   <object id="3" x="1568" y="0" width="29.3333" height="606"/>
-  <object id="9" x="192.951" y="577.211" width="30.6428" height="30.0492"/>
-  <object id="10" x="287.88" y="512.896" width="31.7255" height="30.5505"/>
+  <object id="9" x="192.081" y="576" width="32" height="32"/>
+  <object id="10" x="287.88" y="512.896" width="32" height="32"/>
   <object id="12" x="481.222" y="481.222" width="222.841" height="29.7762"/>
   <object id="13" x="384.209" y="385.17" width="193.065" height="31.6972"/>
   <object id="14" x="256.46" y="257.42" width="156.565" height="28.8157"/>

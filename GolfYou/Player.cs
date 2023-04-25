@@ -98,7 +98,7 @@ namespace GolfYou
             }
             else if (rolling) //Head sprite is drawn with rotation tied to x velocity, the faster the player is going, the faster the rotation.
             {
-                _spriteBatch.Draw(head, new Rectangle(playerHitbox.X + 12, playerHitbox.Y + 12, 26, 20), null, Color.White, rotation, origin, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(head, new Rectangle(playerHitbox.X + 12, playerHitbox.Y + 20, 26, 20), null, Color.White, rotation, origin, SpriteEffects.None, 0f);
                 rotation = -.1f * velocity.X;
             }
         }
