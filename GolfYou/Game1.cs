@@ -20,7 +20,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"GolfYouScrollingTest.tmx", "LevelTwoTest.tmx"};
+		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx"};
 		int levelCounter = 0;
 
 		private Texture2D startMenuSprites;
@@ -103,8 +103,9 @@ namespace GolfYou
 			// if start pressed, start loading level and the game
 			if (startButtonPressed)
 			{
+				if (startMenu) { LoadLevel(); }
 				startMenu = false;
-				LoadLevel();
+				
 
                 myPlayer.playAnimation(gameTime);
                 myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
@@ -128,6 +129,7 @@ namespace GolfYou
 						controlButtonPressed = false;
 						startMenu = true;
 					}
+					else { LoadLevel(); }
 				}
 			}
 
@@ -143,7 +145,7 @@ namespace GolfYou
                 _spriteBatch.Begin();
 				myMenu.drawStartMenu(_spriteBatch);
             }
-            if (startButtonPressed)
+            else if (startButtonPressed && !levelEnd)
             {
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: myCamera.Transform);
                 levelManager.drawLevel(_spriteBatch);
@@ -152,13 +154,13 @@ namespace GolfYou
 
 
             }
-			if (controlButtonPressed)
+			else if (controlButtonPressed)
 			{
 				_spriteBatch.Begin();
 				myMenu.drawControlMenu(_spriteBatch);
 			}
 
-			if(levelEnd)
+			else if(levelEnd)
 			{
                 _spriteBatch.Begin();
 				myMenu.drawLevelEndMenu(_spriteBatch);

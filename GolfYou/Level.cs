@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Reflection.Metadata;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -21,6 +22,7 @@ namespace GolfYou
         private Dictionary<int, TiledTileset> tilesets;
         private Texture2D tilesetTexture;
         private Texture2D tilesetTexture2;
+        private Texture2D flagTexture;
         private TiledLayer collisionLayer;
         private TiledLayer endLayer;
 
@@ -44,8 +46,9 @@ namespace GolfYou
             map = new TiledMap(Content.RootDirectory + "/Levels/" + levelName);
             tilesets = map.GetTiledTilesets(Content.RootDirectory + "/Levels/");
 
-            tilesetTexture = Content.Load<Texture2D>("Levels/LevelMaterials/Terrain (32x32)");
-            tilesetTexture2 = Content.Load<Texture2D>("Levels/LevelMaterials/Decorations (32x32)");
+            tilesetTexture = Content.Load<Texture2D>("Levels/LevelMaterials/tileset");
+            tilesetTexture2 = Content.Load<Texture2D>("Levels/LevelMaterials/back");
+            flagTexture = Content.Load<Texture2D>("Levels/LevelMaterials/GolfFLag");
 
             collisionLayer = map.Layers.First(l => l.name == "Collision");
             endLayer = map.Layers.First(l => l.name == "StartEnd");
@@ -55,6 +58,9 @@ namespace GolfYou
         public void drawLevel(SpriteBatch _spriteBatch)
         {
             var tileLayers = map.Layers.Where(x => x.type == TiledLayerType.TileLayer);
+            var flagLayer = map.Layers.Where(x => x.type == TiledLayerType.ImageLayer).First();
+            
+
 
             foreach (var layer in tileLayers)
             {
@@ -129,8 +135,11 @@ namespace GolfYou
 
 
                         // Render sprite at position tileX, tileY using the rect
-                        if (layer.name == "Terrain" || layer.name == "Background") { _spriteBatch.Draw(tilesetTexture, destination, source, Color.White, (float)rotation, Vector2.Zero, effects, 0); }
-                        else { _spriteBatch.Draw(tilesetTexture2, destination, source, Color.White, (float)rotation, Vector2.Zero, effects, 0); }
+                        _spriteBatch.Draw(flagTexture, new Vector2(flagLayer.offsetX, flagLayer.offsetY), Color.White);
+                        if (layer.name == "Terrain") { _spriteBatch.Draw(tilesetTexture, destination, source, Color.White, (float)rotation, Vector2.Zero, effects, 0); }
+                        else if (layer.name == "Background") { _spriteBatch.Draw(tilesetTexture2, destination, source, Color.White, (float)rotation, Vector2.Zero, effects, 0); }
+                        
+
 
                     }
                 }
