@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace GolfYou
 {
@@ -17,12 +18,21 @@ namespace GolfYou
 		private HUD myHUD = new HUD();
 		private Level levelManager = new Level();
 		private Camera myCamera = new Camera();
-		private string[] levels = {"GolfYouScrollingTest.tmx", "LevelTwoTest.tmx"};
+		private Menu myMenu = new Menu();
+
+		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx"};
 		int levelCounter = 0;
 
+		private Texture2D startMenuSprites;
         public static int ScreenHeight;
 		public static int ScreenWidth;
-		public static bool levelEnd = true;
+		public static bool levelEnd;
+		public static bool loadMainMenu;
+		public static bool startMenu = true;
+		public static bool startButtonPressed;
+		public static bool loadControlMenu;
+		public static bool controlButtonPressed;
+
 
 		public Game1()
 		{
@@ -41,45 +51,127 @@ namespace GolfYou
 		protected override void LoadContent()
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
+			myMenu.loadMenus(this.Content);
 			myPlayer.loadPlayerContent(this.Content);
 			myHUD.loadHudContent(this.Content);
-		}
+			startButtonPressed = false;
+			loadMainMenu = false;
+			controlButtonPressed = false;
+			levelEnd = false;
+
+    }
 
 		protected override void Update(GameTime gameTime)
 		{
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
-			// TODO: Add your update logic here
+            // TODO: Add your update logic here
 			
+            MouseState mouseState = Mouse.GetState();
+			if(startMenu)
+			{
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    // Check for intersection
+                    if (myMenu.didPressStart(mouseState))
+                    {
+                        startButtonPressed = true;
+
+                    }
+                    if (myMenu.didPressControls(mouseState))
+                    {
+                        controlButtonPressed = true;
+                        startMenu = false;
+                    }
+                }
+            }
+            
+
+			if(controlButtonPressed)
+			{
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (myMenu.controlDidPressExitToStart(mouseState))
+                    {
+						controlButtonPressed = false;
+                        startMenu = true;
+                    }
+                }
+            }
+
+			// if start pressed, start loading level and the game
+			if (startButtonPressed && !levelEnd)
+			{
+				if (startMenu) { LoadLevel(); }
+				startMenu = false;
+				
+
+                myPlayer.playAnimation(gameTime);
+                myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
+                myCamera.Follow(myPlayer.getPlayerHitbox(), levelManager.getMapBounds());
+                myHUD.playHudAnimations(gameTime, myPlayer.getIsPutting(), myPlayer.rolling, myPlayer.getAnglePutting(), myPlayer.getFacing()); //HUD MUST be drawn before physics as the physics relies on calculations done in the HUD class,
+                                                                                                                                                //weird I know, but it was an easy solution
+                myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPlayerHitbox(),
+                myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier(), myHUD.getAngle(), levelManager.getCollisionLayer()));
+                levelManager.endCurLevel(myPlayer.getPlayerHitbox());
+            }
+
+			// if level end, press exit to main menu, go back and load main
+
 			if (levelEnd)
 			{
-				LoadLevel();
-                
-            }
-			myPlayer.playAnimation(gameTime);
-			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
-			myCamera.Follow(myPlayer.getPlayerHitbox(), levelManager.getMapBounds());
-            myHUD.playHudAnimations(gameTime, myPlayer.getIsPutting(), myPlayer.rolling, myPlayer.getAnglePutting(), myPlayer.getFacing()); //HUD MUST be drawn before physics as the physics relies on calculations done in the HUD class,
-																																			//weird I know, but it was an easy solution
-            myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPlayerHitbox(),
-				myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier(), myHUD.getAngle(), levelManager.getCollisionLayer()));
-			levelManager.endCurLevel(myPlayer.getPlayerHitbox());
-//			Debug.WriteLine(myPhysics.getVelocity());
+				if (mouseState.LeftButton == ButtonState.Pressed)
+				{
+					if (myMenu.didPressExitToStart(mouseState))
+					{
+						levelEnd = false;
+						controlButtonPressed = false;
+						startButtonPressed= false;
+						startMenu = true;
+						levelCounter = 0;
+					}
+					else { LoadLevel(); }
+				}
+			}
 
-
-
-			base.Update(gameTime);
+            base.Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime)
 		{
-			//GraphicsDevice.Clear(Color.CornflowerBlue);
-			_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: myCamera.Transform);
-            levelManager.drawLevel(_spriteBatch);
-            myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
-			myHUD.drawHudContent(_spriteBatch, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition(), myPlayer.getAnglePutting(), myPlayer.getFacing());
-			_spriteBatch.End();
+			GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+			
+            if(startMenu)
+			{
+                _spriteBatch.Begin();
+				myMenu.drawStartMenu(_spriteBatch);
+            }
+            else if (startButtonPressed && !levelEnd)
+            {
+                _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: myCamera.Transform);
+                levelManager.drawLevel(_spriteBatch);
+                myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
+                myHUD.drawHudContent(_spriteBatch, gameTime, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition(), myPlayer.getAnglePutting(), myPlayer.getFacing());
+                _spriteBatch.End();
+				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 
+
+
+            }
+			else if (controlButtonPressed)
+			{
+				_spriteBatch.Begin();
+				myMenu.drawControlMenu(_spriteBatch);
+			}
+
+			else if(levelEnd)
+			{
+                _spriteBatch.Begin();
+				myMenu.drawLevelEndMenu(_spriteBatch);
+            }
+
+            _spriteBatch.End();
 			
 			base.Draw(gameTime);
 		}

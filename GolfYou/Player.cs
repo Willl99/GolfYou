@@ -33,7 +33,7 @@ namespace GolfYou
         private bool isPutting; //Is the player putting?
         private bool wasPutting; //Was the player just putting?
         private bool anglePutting; //Angle the player chose for the current putt
-        private int hittingMode; // 0 = drive, 1 = tap
+        private int hittingMode; // 0 = drive, 1 = tap / putter
 
         private const Buttons puttButton = Buttons.A;
 
@@ -98,7 +98,7 @@ namespace GolfYou
             }
             else if (rolling) //Head sprite is drawn with rotation tied to x velocity, the faster the player is going, the faster the rotation.
             {
-                _spriteBatch.Draw(head, new Rectangle(playerHitbox.X + 12, playerHitbox.Y + 12, 26, 20), null, Color.White, rotation, origin, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(head, new Rectangle(playerHitbox.X + 12, playerHitbox.Y + 20, 26, 20), null, Color.White, rotation, origin, SpriteEffects.None, 0f);
                 rotation = -.1f * velocity.X;
             }
         }
@@ -240,14 +240,14 @@ namespace GolfYou
             // If any digital horizontal movement input is found, override the analog movement.
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left) ||
-                keyboardState.IsKeyDown(Keys.A) && !isPutting && !wasPutting && !rolling)
+                keyboardState.IsKeyDown(Keys.A) && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 facing = 0;
                 movement = -1.0f;
             }
             else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
                      keyboardState.IsKeyDown(Keys.Right) ||
-                     keyboardState.IsKeyDown(Keys.D) && !isPutting && !wasPutting && !rolling)
+                     keyboardState.IsKeyDown(Keys.D) && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 facing = 1;
                 movement = 1.0f;
@@ -283,7 +283,7 @@ namespace GolfYou
                 currentAnimationIndexPuttingLeft = 5;
             }
 
-            if (myKeyboard.HasBeenPressed(Keys.Q) && !isPutting && !wasPutting)
+            if (myKeyboard.HasBeenPressed(Keys.Q) && !isPutting && !wasPutting && !anglePutting)
             {
                 if (hittingMode == 0) { hittingMode = 1; }
                 else { hittingMode = 0; }
