@@ -152,7 +152,10 @@ namespace GolfYou
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: myCamera.Transform);
                 levelManager.drawLevel(_spriteBatch);
                 myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
-                myHUD.drawHudContent(_spriteBatch, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition(), myPlayer.getAnglePutting(), myPlayer.getFacing());
+                myHUD.drawHudContent(_spriteBatch, gameTime, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition(), myPlayer.getAnglePutting(), myPlayer.getFacing());
+                _spriteBatch.End();
+				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 
 
 
             }
