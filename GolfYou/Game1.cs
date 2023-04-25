@@ -101,7 +101,7 @@ namespace GolfYou
             }
 
 			// if start pressed, start loading level and the game
-			if (startButtonPressed)
+			if (startButtonPressed && !levelEnd)
 			{
 				if (startMenu) { LoadLevel(); }
 				startMenu = false;
@@ -127,7 +127,9 @@ namespace GolfYou
 					{
 						levelEnd = false;
 						controlButtonPressed = false;
+						startButtonPressed= false;
 						startMenu = true;
+						levelCounter = 0;
 					}
 					else { LoadLevel(); }
 				}

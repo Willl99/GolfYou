@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="24" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="21">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="24" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="22">
  <tileset firstgid="1" source="LevelMaterials/Background.tsx"/>
  <tileset firstgid="85" source="LevelMaterials/GolfTerrain.tsx"/>
  <layer id="2" name="Background" width="24" height="16">
@@ -50,10 +50,10 @@
   <object id="5" x="1.0018" y="481.034" width="766.053" height="31.8657"/>
   <object id="6" x="736.325" y="-3.54571" width="30.7295" height="485.762"/>
   <object id="8" x="256" y="416" width="30.7295" height="67.3684"/>
+  <object id="21" x="384.5" y="0" width="31.5" height="446.5"/>
  </objectgroup>
  <objectgroup id="4" name="StartEnd">
   <object id="1" name="BeginSquare" x="43.7304" y="398.301" width="70.9141" height="76.8236"/>
   <object id="2" name="EndSquare" x="651" y="416.437" width="42.7789" height="64.8693"/>
-  <object id="15" x="383.333" y="0" width="33.3333" height="447.619"/>
  </objectgroup>
 </map>

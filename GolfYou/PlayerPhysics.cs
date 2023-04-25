@@ -149,7 +149,7 @@ namespace GolfYou
             {
                 var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
                 bool intersectTop = player.Bottom - objRect.Top < 20 && player.X > objRect.Left && player.X < objRect.Right;
-                bool intersectBottom = objRect.Bottom - player.Top < 30 && player.X > objRect.Left && player.X < objRect.Right;
+                bool intersectBottom = objRect.Bottom - player.Top < 20 && player.X > objRect.Left && player.X < objRect.Right;
                 bool intersectLeft = player.Right - objRect.Left < 20 && player.Y < objRect.Bottom && player.Y > objRect.Top;
                 bool intersectRight = objRect.Right - player.Left < 20 && player.Y < objRect.Bottom && player.Y > objRect.Top;
                 
@@ -159,7 +159,7 @@ namespace GolfYou
                     player.Y = MathHelper.Clamp(player.Y, 0, objRect.Top - 32);
 
                 }
-                else if (intersectBottom) 
+                if (intersectBottom) 
                 {
                     player.Y = MathHelper.Clamp(player.Y, objRect.Bottom, 1000000);
 
@@ -169,7 +169,7 @@ namespace GolfYou
                 {
                     player.X = MathHelper.Clamp(player.X, 0, objRect.Left - 32);
                 }
-                else if(intersectRight)
+                if(intersectRight)
                 {
                     player.X = MathHelper.Clamp(player.X, objRect.Right, 10000);
                 }
