@@ -26,9 +26,9 @@ namespace GolfYou
 		private Texture2D startMenuSprites;
         public static int ScreenHeight;
 		public static int ScreenWidth;
-		public static bool levelEnd = true;
+		public static bool levelEnd;
 		public static bool loadMainMenu;
-		public static bool startMenu;
+		public static bool startMenu = true;
 		public static bool startButtonPressed;
 		public static bool loadControlMenu;
 		public static bool controlButtonPressed;
@@ -56,8 +56,8 @@ namespace GolfYou
 			myHUD.loadHudContent(this.Content);
 			startButtonPressed = false;
 			loadMainMenu = false;
-			startMenu = false;
 			controlButtonPressed = false;
+			levelEnd = false;
 
     }
 
@@ -130,24 +130,6 @@ namespace GolfYou
 					}
 				}
 			}
-
-			/*
-			if (levelEnd)
-			{
-				LoadLevel();
-                
-            }
-
-			myPlayer.playAnimation(gameTime);
-			myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
-			myCamera.Follow(myPlayer.getPlayerHitbox(), levelManager.getMapBounds());
-            myHUD.playHudAnimations(gameTime, myPlayer.getIsPutting(), myPlayer.rolling, myPlayer.getAnglePutting(), myPlayer.getFacing()); //HUD MUST be drawn before physics as the physics relies on calculations done in the HUD class,
-																																			//weird I know, but it was an easy solution
-            myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPlayerHitbox(),
-			myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier(), myHUD.getAngle(), levelManager.getCollisionLayer()));
-			levelManager.endCurLevel(myPlayer.getPlayerHitbox());
-//			Debug.WriteLine(myPhysics.getVelocity());
-			*/
 
             base.Update(gameTime);
 		}

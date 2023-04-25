@@ -37,10 +37,10 @@
 	  <None Update="Content\Levels\LevelMaterials\Decorations.tsx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Content\Levels\LevelMaterials\Terrain (32x32).tsx">
+	  <None Update="Content\Levels\LevelTwoTest.tmx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Content\Levels\LevelTwoTest.tmx">
+	  <None Update="Content\badend.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
