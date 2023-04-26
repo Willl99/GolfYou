@@ -254,17 +254,20 @@ namespace GolfYou
                 movement = 1.0f;
             }
 
+
             // Check if the player wants to putt.
             myKeyboard.GetState(); //See below for an explanation on 'myKeboard'
             myGamepad.GetState();
             if (((myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && isPutting && !anglePutting)) //The order of these statements matters, its probably slightly spaghetti, but it does work.
             {
+                movement = 0.0f;
                 isPutting = false;
                 wasPutting = true;
 
             }
             else if ((myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && anglePutting && hittingMode == 0|| (myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && hittingMode == 1 && !isPutting) 
             {
+                movement = 0.0f;
                 anglePutting = false;
                 isPutting = true;
                 
@@ -272,11 +275,12 @@ namespace GolfYou
 
             else if ((myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && !rolling && !isPutting && !anglePutting && !wasPutting && hittingMode == 0)
             {
+                movement = 0.0f;
                 anglePutting = true;
 
             }
 
-            if (keyboardState.IsKeyDown(Keys.C))
+            if (keyboardState.IsKeyDown(Keys.C) || gamePadState.IsButtonDown(Buttons.B))
             {
                 isPutting = false;
                 wasPutting = false;
@@ -285,7 +289,7 @@ namespace GolfYou
                 currentAnimationIndexPuttingLeft = 5;
             }
 
-            if (myKeyboard.HasBeenPressed(Keys.Q) && !isPutting && !wasPutting && !anglePutting)
+            if ((myKeyboard.HasBeenPressed(Keys.Q) || myGamepad.HasBeenPressed(Buttons.Y)) && !isPutting && !wasPutting && !anglePutting)
             {
                 if (hittingMode == 0) { hittingMode = 1; }
                 else { hittingMode = 0; }
