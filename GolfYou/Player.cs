@@ -238,16 +238,16 @@ namespace GolfYou
                 movement = 0.0f;
 
             // If any digital horizontal movement input is found, override the analog movement.
-            if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
+            if ((gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left) ||
-                keyboardState.IsKeyDown(Keys.A) && !isPutting && !wasPutting && !rolling && !anglePutting)
+                keyboardState.IsKeyDown(Keys.A) || gamePadState.ThumbSticks.Left.X < -.1) && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 facing = 0;
                 movement = -1.0f;
             }
-            else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
+            else if ((gamePadState.IsButtonDown(Buttons.DPadRight) ||
                      keyboardState.IsKeyDown(Keys.Right) ||
-                     keyboardState.IsKeyDown(Keys.D) && !isPutting && !wasPutting && !rolling && !anglePutting)
+                     keyboardState.IsKeyDown(Keys.D) || gamePadState.ThumbSticks.Left.X > .1) && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 facing = 1;
                 movement = 1.0f;
