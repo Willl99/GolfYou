@@ -59,7 +59,7 @@ namespace GolfYou
 			controlButtonPressed = false;
 			levelEnd = false;
 
-    }
+        }
 
 		protected override void Update(GameTime gameTime)
 		{
