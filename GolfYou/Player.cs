@@ -231,50 +231,56 @@ namespace GolfYou
                     GameTime gameTime)
         {
             // Get analog horizontal movement.
-            movement = gamePadState.ThumbSticks.Left.X;
+            if (!rolling && !isPutting && !wasPutting && !anglePutting) { movement = gamePadState.ThumbSticks.Left.X; }
+            
 
             // Ignore small movements to prevent running in place.
             if (Math.Abs(movement) < 0.5f)
                 movement = 0.0f;
 
             // If any digital horizontal movement input is found, override the analog movement.
-            if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
+            if ((gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left) ||
-                keyboardState.IsKeyDown(Keys.A) && !isPutting && !wasPutting && !rolling && !anglePutting)
+                keyboardState.IsKeyDown(Keys.A) || gamePadState.ThumbSticks.Left.X < 0) && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 facing = 0;
                 movement = -1.0f;
             }
-            else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
+            else if ((gamePadState.IsButtonDown(Buttons.DPadRight) ||
                      keyboardState.IsKeyDown(Keys.Right) ||
-                     keyboardState.IsKeyDown(Keys.D) && !isPutting && !wasPutting && !rolling && !anglePutting)
+                     keyboardState.IsKeyDown(Keys.D) || gamePadState.ThumbSticks.Left.X > 0) && !isPutting && !wasPutting && !rolling && !anglePutting)
             {
                 facing = 1;
                 movement = 1.0f;
             }
 
+
             // Check if the player wants to putt.
             myKeyboard.GetState(); //See below for an explanation on 'myKeboard'
-            if ((myKeyboard.HasBeenPressed(Keys.Space) && isPutting && !anglePutting)) //The order of these statements matters, its probably slightly spaghetti, but it does work.
+            myGamepad.GetState();
+            if (((myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && isPutting && !anglePutting)) //The order of these statements matters, its probably slightly spaghetti, but it does work.
             {
+                movement = 0.0f;
                 isPutting = false;
                 wasPutting = true;
 
             }
-            else if (myKeyboard.HasBeenPressed(Keys.Space) && anglePutting && hittingMode == 0|| myKeyboard.HasBeenPressed(Keys.Space) && hittingMode == 1 && !isPutting) 
+            else if ((myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && anglePutting && hittingMode == 0|| (myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && hittingMode == 1 && !isPutting) 
             {
+                movement = 0.0f;
                 anglePutting = false;
                 isPutting = true;
                 
             }
 
-            else if (myKeyboard.HasBeenPressed(Keys.Space) && !rolling && !isPutting && !anglePutting && !wasPutting && hittingMode == 0)
+            else if ((myKeyboard.HasBeenPressed(Keys.Space) || myGamepad.HasBeenPressed(Buttons.A)) && !rolling && !isPutting && !anglePutting && !wasPutting && hittingMode == 0)
             {
+                movement = 0.0f;
                 anglePutting = true;
 
             }
 
-            if (keyboardState.IsKeyDown(Keys.C))
+            if (keyboardState.IsKeyDown(Keys.C) || gamePadState.IsButtonDown(Buttons.B))
             {
                 isPutting = false;
                 wasPutting = false;
@@ -283,7 +289,7 @@ namespace GolfYou
                 currentAnimationIndexPuttingLeft = 5;
             }
 
-            if (myKeyboard.HasBeenPressed(Keys.Q) && !isPutting && !wasPutting && !anglePutting)
+            if ((myKeyboard.HasBeenPressed(Keys.Q) || myGamepad.HasBeenPressed(Buttons.Y)) && !isPutting && !wasPutting && !anglePutting)
             {
                 if (hittingMode == 0) { hittingMode = 1; }
                 else { hittingMode = 0; }
@@ -364,6 +370,25 @@ namespace GolfYou
                                                         //so if its held down, then IsKeyDown on the tick before and current are both true and thus it will return false
             {
                 return currentKeyState.IsKeyDown(key) && !previousKeyState.IsKeyDown(key);
+            }
+
+        }
+        public class myGamepad // This is a very simple class to ensure that actions are only carried out once per key hit, otherwise putting actions would happen for as long as the space bar was held down
+        {
+            static GamePadState currentButtonState;
+            static GamePadState previousButtonState;
+
+            public static GamePadState GetState() //Get state from directly from the XNA framework
+            {
+                previousButtonState = currentButtonState;
+                currentButtonState = Microsoft.Xna.Framework.Input.GamePad.GetState(0);
+                return currentButtonState;
+            }
+
+            public static bool HasBeenPressed(Buttons button) //If a key is currently pressed and wasn't pressed on the tick before, then send true, else its false,
+                                                        //so if its held down, then IsKeyDown on the tick before and current are both true and thus it will return false
+            {
+                return currentButtonState.IsButtonDown(button) && !previousButtonState.IsButtonDown(button);
             }
         }
 
