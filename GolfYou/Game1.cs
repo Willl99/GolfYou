@@ -2,7 +2,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Diagnostics;
 using TiledCS;
 
 namespace GolfYou
@@ -162,8 +161,7 @@ namespace GolfYou
                 drawEnemies();
                 _spriteBatch.End();
 				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
-				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 
-				
+				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 	
 
             }
 			else if (controlButtonPressed)
@@ -200,7 +198,6 @@ namespace GolfYou
 			TiledLayer enemytiles = levelManager.getEnemyLayer();
 			foreach (var obj in enemytiles.objects)
 			{
-				
 				var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
 				enemies.Add(new Enemy(this.Content, obj.name=="Stationary", new Vector2(obj.x, obj.y)));
 			}
