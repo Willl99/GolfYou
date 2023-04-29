@@ -2,9 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
+using TiledCS;
 
 namespace GolfYou
 {
@@ -20,7 +18,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx"};
+		private string[] levels = {"LevelOne.tmx", "LevelFive.tmx"};
 		int levelCounter = 0;
 
 		private Texture2D startMenuSprites;
@@ -32,7 +30,11 @@ namespace GolfYou
 		public static bool startButtonPressed;
 		public static bool loadControlMenu;
 		public static bool controlButtonPressed;
+		public List<Enemy> enemies;
+		private EnemyPhysics enemyPhysics;
 
+		private SpriteFont hudFont;
+		private bool DEBUG = false; // Turns on enemy count/position display and draws hitboxes
 
 		public Game1()
 		{
@@ -58,6 +60,8 @@ namespace GolfYou
 			loadMainMenu = false;
 			controlButtonPressed = false;
 			levelEnd = false;
+			enemies = new List<Enemy>();
+			hudFont = Content.Load<SpriteFont>("File");
 
     }
 
@@ -112,6 +116,7 @@ namespace GolfYou
                 myCamera.Follow(myPlayer.getPlayerHitbox(), levelManager.getMapBounds());
                 myHUD.playHudAnimations(gameTime, myPlayer.getIsPutting(), myPlayer.rolling, myPlayer.getAnglePutting(), myPlayer.getFacing()); //HUD MUST be drawn before physics as the physics relies on calculations done in the HUD class,
                                                                                                                                                 //weird I know, but it was an easy solution
+				updateEnemies();
                 myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPlayerHitbox(),
                 myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier(), myHUD.getAngle(), levelManager.getCollisionLayer()));
                 levelManager.endCurLevel(myPlayer.getPlayerHitbox());
@@ -156,7 +161,7 @@ namespace GolfYou
                 _spriteBatch.End();
 				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 
-
+				drawEnemies();
 
             }
 			else if (controlButtonPressed)
@@ -183,6 +188,52 @@ namespace GolfYou
             myPlayer.setSpawnLocation(levelManager.getPlayerSpawnLocation());
             levelEnd = false;
             levelCounter++;
+			// Create enemy objects and store in array
+			enemies = new List<Enemy>(); // Delete old array
+			if (DEBUG)
+			{
+				enemies.Add(new Enemy(this.Content, true, new Vector2(200, 200)));
+				enemies.Add(new Enemy(this.Content, false, new Vector2(250, 200)));
+			}
+			TiledLayer enemytiles = levelManager.getEnemyLayer();
+			foreach (var obj in enemytiles.objects)
+			{
+				var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
+				enemies.Add(new Enemy(this.Content, obj.name=="Stationary", new Vector2(obj.x, obj.y)));
+			}
         }
+
+		private void updateEnemies()
+		{
+			foreach (Enemy enemy in enemies)
+			{
+				enemy.updateEnemy();
+			}
+		}
+
+		private void drawEnemies()
+		{
+			if (DEBUG)
+			{
+				string num_enemies = "Number of Enemies: " + enemies.Count.ToString();
+            	_spriteBatch.DrawString(hudFont, num_enemies, new Vector2(35, 30), Color.Purple);
+			}
+			
+			int i = 0;
+			foreach (Enemy enemy in enemies)
+			{
+				if (DEBUG)
+				{
+					i++;
+					Rectangle hb = enemy.getHitBox();
+					int frame = enemy.getFrame();
+					bool idle = enemy.getIdle();
+					string str = "(" + hb.X.ToString() + ", " + hb.Y.ToString() + ") Idle: " + idle.ToString() + " Frame Index: " + frame.ToString();
+					_spriteBatch.DrawString(hudFont, str, new Vector2(35, 30+i*16), Color.Purple);
+					enemy.drawHitBoxes(_spriteBatch);
+				}
+				enemy.drawEnemy(_spriteBatch);
+			}
+		}
 	}
 }

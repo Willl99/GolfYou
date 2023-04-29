@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="25" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="22">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="25" height="32" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="25">
  <tileset firstgid="1" source="LevelMaterials/Background.tsx"/>
  <tileset firstgid="85" source="LevelMaterials/GolfTerrain.tsx"/>
  <layer id="2" name="Background" width="25" height="32">
@@ -74,9 +74,14 @@
 104,0,0,0,0,0,0,0,0,0,0,0,0,124,0,0,0,0,0,0,0,0,0,0,90,
 104,0,0,0,0,0,0,0,0,86,0,0,0,1073741912,0,0,0,0,0,0,0,0,0,0,90,
 104,0,0,0,0,0,0,0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,90,
-89,107,86,86,86,86,86,86,86,140,86,86,86,86,86,86,86,86,86,86,86,86,86,108,89
+89,107,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,108,89
 </data>
  </layer>
+ <objectgroup id="10" name="Enemies">
+  <object id="22" x="576.645" y="959.356" width="33.0101" height="30.947"/>
+  <object id="23" name="Stationary" x="191.871" y="956.262" width="37.1364" height="35.0732"/>
+  <object id="24" name="Stationary" x="249.639" y="955.23" width="35.0732" height="36.1048"/>
+ </objectgroup>
  <objectgroup id="5" name="Collision">
   <object id="4" x="0" y="512" width="32.0476" height="512.855"/>
   <object id="5" x="0.0018" y="993.034" width="799.053" height="31.8657"/>
