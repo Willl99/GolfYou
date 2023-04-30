@@ -22,7 +22,7 @@ namespace GolfYou
 		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
 		int levelCounter = 0;
 
-		private Texture2D startMenuSprites;
+		private Texture2D startMenuSprites;ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp
         public static int ScreenHeight;
 		public static int ScreenWidth;
 		public static bool levelEnd;
@@ -126,7 +126,7 @@ namespace GolfYou
 			{
 				if (mouseState.LeftButton == ButtonState.Pressed)
 				{
-					if (myMenu.didPressExitToStart(mouseState))
+					if (myMenu.didPressExitToStartDeath(mouseState))
 					{
 						deathMenu = false;
 						controlButtonPressed = false;
@@ -134,6 +134,13 @@ namespace GolfYou
 						startMenu = true;
 						levelCounter = 0;
 					}
+					if (myMenu.didPressRestart(mouseState))
+					{
+
+						levelCounter--;
+						LoadLevel();
+                        deathMenu = false;
+                    }
 				}
 			}
 

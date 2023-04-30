@@ -14,6 +14,8 @@ namespace GolfYou
         private Microsoft.Xna.Framework.Rectangle controlMenuHitbox = new Microsoft.Xna.Framework.Rectangle(350, 200, 100, 50);
         private Microsoft.Xna.Framework.Rectangle controlsExitToStartMenuHitbox = new Microsoft.Xna.Framework.Rectangle(350, 250, 100, 50);
         private Microsoft.Xna.Framework.Rectangle exitToStartMenuHitbox = new Microsoft.Xna.Framework.Rectangle(350, 250, 100, 50);
+        private Microsoft.Xna.Framework.Rectangle exitToStartMenuHitboxDeath = new Microsoft.Xna.Framework.Rectangle(350, 350, 100, 50);
+        private Microsoft.Xna.Framework.Rectangle restartMenuHitbox = new Microsoft.Xna.Framework.Rectangle(350, 300, 100, 50);
 
         public void loadMenus(ContentManager Content)
         {
@@ -57,6 +59,24 @@ namespace GolfYou
             return false;
         }
 
+        public bool didPressExitToStartDeath(MouseState mouseState)
+        {
+            if (exitToStartMenuHitboxDeath.Contains(mouseState.X, mouseState.Y))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool didPressRestart(MouseState mouseState)
+        {
+            if (restartMenuHitbox.Contains(mouseState.X, mouseState.Y))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void drawStartMenu(SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(menuBackground, new Vector2(0, 0), new Microsoft.Xna.Framework.Rectangle(0, 870, 800, 480), Microsoft.Xna.Framework.Color.White);
@@ -92,10 +112,10 @@ namespace GolfYou
         {
             adjustMenuBox(new Vector2(350, 300));
             _spriteBatch.Draw(menuBackground, new Vector2(0, 0), new Microsoft.Xna.Framework.Rectangle(0, 870, 800, 480), Microsoft.Xna.Framework.Color.White);
-            _spriteBatch.DrawString(font, "L+Ratio+F", new Vector2(350, 100), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "You Died :(", new Vector2(348, 150), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "(Tip: Make sure you are in putt mode to defeat enemies, and are moving fast!)", new Vector2(125, 200), Microsoft.Xna.Framework.Color.White);
-            _spriteBatch.DrawString(font, "Main Menu", new Vector2(350, 300), Microsoft.Xna.Framework.Color.Cyan);
+            _spriteBatch.DrawString(font, "Retart Level", new Vector2(350, 300), Microsoft.Xna.Framework.Color.Cyan);
+            _spriteBatch.DrawString(font, "Main Menu", new Vector2(350, 350), Microsoft.Xna.Framework.Color.Cyan);
         }
 
         private void adjustMenuBox(Vector2 vec)
