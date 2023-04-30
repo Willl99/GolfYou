@@ -93,7 +93,7 @@ namespace GolfYou
             _spriteBatch.DrawString(font, "A: Move Left", new Vector2(350, 150), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "D: Move Right", new Vector2(350, 175), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "Space to enter putting mode, Space again to choose angle, Space again to choose velocity", new Vector2(100, 200), Microsoft.Xna.Framework.Color.White);
-            _spriteBatch.DrawString(font, "C to cancel out of putting mode, Q to change putting mode", new Vector2(175, 225), Microsoft.Xna.Framework.Color.White);
+            _spriteBatch.DrawString(font, "C to cancel out of putting mode, Q to switch between putter/driver", new Vector2(175, 225), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "Defeat enemies by putting into them (make sure you're going fast too!)", new Vector2(125, 250), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "Exit to Main Menu", new Vector2(340, 275), Microsoft.Xna.Framework.Color.Cyan);
         }

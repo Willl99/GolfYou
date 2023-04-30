@@ -84,13 +84,10 @@ namespace GolfYou
                     if (myMenu.didPressStart(mouseState))
                     {
                         startButtonPressed = true;
-						paused = false;
                     }
                     if (myMenu.didPressControls(mouseState))
                     {
-                        controlButtonPressed = true;
-                        startMenu = false;
-						paused = false;
+                        toControls();
                     }
                 }
             }
@@ -102,9 +99,7 @@ namespace GolfYou
                 {
                     if (myMenu.controlDidPressExitToStart(mouseState))
                     {
-						controlButtonPressed = false;
-                        startMenu = true;
-						paused = false;
+						toStart();
                     }
                 }
             }
@@ -301,6 +296,13 @@ namespace GolfYou
 			}
 		}
 
+		private void toControls()
+		{
+			controlButtonPressed = true;
+			startMenu = false;
+			paused = false;
+		}
+
 		private void toMenu()
 		{
 			levelEnd = false;
@@ -335,6 +337,12 @@ namespace GolfYou
 			paused = false;
 			startButtonPressed = true;
 			controlButtonPressed = false;
+		}
+
+		private void toStart()
+		{
+			controlButtonPressed = false;
+			startMenu = true;
 		}
 	}
 }
