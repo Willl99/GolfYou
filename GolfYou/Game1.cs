@@ -22,7 +22,7 @@ namespace GolfYou
 		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
 		int levelCounter = 0;
 
-		private Texture2D startMenuSprites;ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp
+		private Texture2D startMenuSprites;
         public static int ScreenHeight;
 		public static int ScreenWidth;
 		public static bool levelEnd;
