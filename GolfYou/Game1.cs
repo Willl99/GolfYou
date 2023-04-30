@@ -19,7 +19,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
+		private string[] levels = {/*"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"*/ "LastLevel.tmx"};
 		int levelCounter = 0;
 
 		private Texture2D startMenuSprites;
@@ -120,6 +120,10 @@ namespace GolfYou
                 myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier(), myHUD.getAngle(), levelManager.getCollisionLayer()));
                 levelManager.endCurLevel(myPlayer.getPlayerHitbox());
 				updateEnemies();
+                if (levelManager.isPlayerOOB(myPlayer.getPosition()))
+                {
+                    deathMenu = true;
+                }
             }
 
 			if (deathMenu)
@@ -189,6 +193,7 @@ namespace GolfYou
                 _spriteBatch.End();
 				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 	
+				
 
             }
 			else if (controlButtonPressed)
@@ -270,7 +275,9 @@ namespace GolfYou
 				{
 					deathMenu = true; // Kill player if player is either not putting or not moving fast enough
 				}
+
 			}
-		}
+
+        }
 	}
 }

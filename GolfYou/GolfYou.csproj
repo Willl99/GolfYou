@@ -34,6 +34,9 @@
 	  <None Update="Content\Levels\GolfYouScrollingTest.tmx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Content\Levels\LastLevel.tmx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Content\Levels\LevelFive.tmx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

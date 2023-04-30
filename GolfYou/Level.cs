@@ -171,6 +171,15 @@ namespace GolfYou
             return enemyLayer;
         }
 
+        public bool isPlayerOOB(Vector2 playerPosition)
+        {
+            if (playerPosition.X < 0 || playerPosition.X > map.Width*32 || playerPosition.Y < 0 || playerPosition.Y > map.Height * 32)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 
 }
