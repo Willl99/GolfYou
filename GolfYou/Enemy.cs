@@ -21,7 +21,7 @@ namespace GolfYou
         bool incFrame;
         Rectangle hitBox;
         int half = 0;
-        int halfcap = 7; // Slows down animations with larger numbers (non-fixable fps, might want to change later to account for gameTime)
+        int halfcap = 10; // Slows down animations with larger numbers (non-fixable fps, might want to change later to account for gameTime)
         const double velocity = 0.08; // How fast velocity is for enemies
         bool onPlatform;
         Rectangle platform = new Rectangle(-1, -2, 0, 0); // Dumb values so the platform identifying code works
@@ -38,7 +38,7 @@ namespace GolfYou
             left = Content.Load<Texture2D>("Sprites/EnemyLeft");
             right = Content.Load<Texture2D>("Sprites/EnemyRight");
             position = pos;
-            hitBox = new Rectangle((int)pos.X, (int)pos.Y, 38, 28);
+            hitBox = new Rectangle((int)pos.X, (int)pos.Y, 28, 28);
             yVelo = 0;
             onPlatform = false;
             iDeath = -1;
@@ -77,9 +77,9 @@ namespace GolfYou
             }
             HandleCollisions(collisionLayer);
             position.Y += (float)yVelo;
-            hitBox.X = (int)position.X;
+            hitBox.X = (int)position.X+10;
             hitBox.Y = (int)position.Y;
-            if (iDeath>0) iDeath++;
+            if (iDeath>=0) iDeath++;
         }
 
         public void drawEnemy(SpriteBatch _spriteBatch)
@@ -183,6 +183,11 @@ namespace GolfYou
         public void setDeath()
         {
             iDeath++;
+        }
+
+        public bool isDying()
+        {
+            return iDeath>=0;
         }
     }
 }

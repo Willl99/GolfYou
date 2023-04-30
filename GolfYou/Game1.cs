@@ -19,7 +19,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelOne.tmx", "LevelFive.tmx"};
+		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
 		int levelCounter = 0;
 
 		private Texture2D startMenuSprites;
@@ -31,10 +31,10 @@ namespace GolfYou
 		public static bool startButtonPressed;
 		public static bool loadControlMenu;
 		public static bool controlButtonPressed;
+		public static bool deathMenu;
 		public List<Enemy> enemies;
 
 		private SpriteFont hudFont;
-		private bool DEBUG = false; // Turns on enemy count/position display and draws hitboxes
 
 		public Game1()
 		{
@@ -60,6 +60,7 @@ namespace GolfYou
 			loadMainMenu = false;
 			controlButtonPressed = false;
 			levelEnd = false;
+			deathMenu = false;
 			enemies = new List<Enemy>();
 			hudFont = Content.Load<SpriteFont>("File");
 
@@ -103,7 +104,6 @@ namespace GolfYou
                     }
                 }
             }
-
 			// if start pressed, start loading level and the game
 			if (startButtonPressed && !levelEnd)
 			{
@@ -116,11 +116,26 @@ namespace GolfYou
                 myCamera.Follow(myPlayer.getPlayerHitbox(), levelManager.getMapBounds());
                 myHUD.playHudAnimations(gameTime, myPlayer.getIsPutting(), myPlayer.rolling, myPlayer.getAnglePutting(), myPlayer.getFacing()); //HUD MUST be drawn before physics as the physics relies on calculations done in the HUD class,
                                                                                                                                                 //weird I know, but it was an easy solution
-				updateEnemies();
                 myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPlayerHitbox(),
                 myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier(), myHUD.getAngle(), levelManager.getCollisionLayer()));
                 levelManager.endCurLevel(myPlayer.getPlayerHitbox());
+				updateEnemies();
             }
+
+			if (deathMenu)
+			{
+				if (mouseState.LeftButton == ButtonState.Pressed)
+				{
+					if (myMenu.didPressExitToStart(mouseState))
+					{
+						deathMenu = false;
+						controlButtonPressed = false;
+						startButtonPressed= false;
+						startMenu = true;
+						levelCounter = 0;
+					}
+				}
+			}
 
 			// if level end, press exit to main menu, go back and load main
 
@@ -152,6 +167,11 @@ namespace GolfYou
                 _spriteBatch.Begin();
 				myMenu.drawStartMenu(_spriteBatch);
             }
+			else if (deathMenu)
+			{
+				_spriteBatch.Begin();
+				myMenu.drawDeathMenu(_spriteBatch);
+			}
             else if (startButtonPressed && !levelEnd)
             {
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: myCamera.Transform);
@@ -190,10 +210,6 @@ namespace GolfYou
             levelCounter++;
 			// Create enemy objects and store in array
 			enemies = new List<Enemy>(); // Delete old array
-			if (DEBUG)
-			{
-				enemies.Add(new Enemy(this.Content, false, new Vector2(250, 200)));
-			}
 			TiledLayer enemytiles = levelManager.getEnemyLayer();
 			foreach (var obj in enemytiles.objects)
 			{
@@ -216,6 +232,10 @@ namespace GolfYou
 			}
 			if (rem.Count>0)
 			{
+				// List needs to be in descending order
+				rem.Sort();
+				rem.Reverse();
+
 				foreach (int j in rem)
 				{
 					enemies.RemoveAt(j);
@@ -225,33 +245,23 @@ namespace GolfYou
 
 		private void drawEnemies()
 		{
-			int i = 0;
 			foreach (Enemy enemy in enemies)
 			{
-				i++;
 				enemy.drawEnemy(_spriteBatch);
-				if (DEBUG)
-				{
-					Rectangle hb = enemy.getHitBox();
-					bool onPlatform = enemy.getOnPlatform();
-					enemy.drawHitBoxes(_spriteBatch);
-					string str = "("+hb.X+","+hb.Y+"), On Platform: " + onPlatform.ToString();
-					_spriteBatch.DrawString(hudFont, str, new Vector2(36, 30+i*16), Color.Purple);
-				}
 			}
 		}
 
 		private void playerEnemyCollision(Enemy enemy)
 		{
-			if (myPlayer.getPlayerHitbox().Intersects(enemy.getHitBox()))
+			if (myPlayer.getPlayerHitbox().Intersects(enemy.getHitBox()) && !enemy.isDying())
 			{
-				if (myPlayer.getHittingMode()==1 && Math.Abs(myPlayer.getMovement())>1)
+				if (myPlayer.getHittingMode()==1 && Math.Abs(myPhysics.getVelocity().X)>250)
 				{
 					enemy.setDeath(); // Kill enemy if player is putting and moving fast enough
 				}
 				else 
 				{
-					// Kill player if player is either not putting or not moving fast enough
+					deathMenu = true; // Kill player if player is either not putting or not moving fast enough
 				}
 			}
 		}

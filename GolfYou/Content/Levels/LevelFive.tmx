@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="31">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="32">
  <tileset firstgid="1" source="LevelMaterials/Background.tsx"/>
  <tileset firstgid="85" source="LevelMaterials/GolfTerrain.tsx"/>
  <layer id="1" name="Background" width="50" height="20">
@@ -56,6 +56,7 @@
  <objectgroup id="6" name="Enemies">
   <object id="29" x="1349.47" y="193.06" width="29.3504" height="28.0459"/>
   <object id="30" name="Stationary" x="641.523" y="158.265" width="30.4681" height="32.1608"/>
+  <object id="31" name="Stationary" x="190.503" y="572.909" width="33.6182" height="30.8166"/>
  </objectgroup>
  <objectgroup id="3" name="Collision">
   <object id="1" x="0" y="-31.6126" width="31.7755" height="669.67"/>
@@ -69,15 +70,15 @@
   <object id="16" x="481.222" y="192.105" width="731.918" height="31.6972"/>
   <object id="18" x="1312.07" y="-0.960523" width="31.6972" height="191.438"/>
   <object id="19" x="1344" y="128" width="191.85" height="31.7762"/>
-  <object id="20" x="1375.72" y="159.447" width="32.4034" height="31.6972"/>
+  <object id="20" x="1375.72" y="159.447" width="32.4034" height="30.3927"/>
   <object id="21" x="1439.82" y="159.447" width="32.07" height="31.6972"/>
-  <object id="22" x="1504" y="160" width="31.7762" height="32"/>
+  <object id="22" x="1504" y="160" width="31.7762" height="30.6955"/>
   <object id="23" x="1248.68" y="95.6621" width="30.7367" height="159.837"/>
   <object id="24" x="1248" y="224" width="347.666" height="31.6972"/>
   <object id="26" x="1313.51" y="622.904" width="254.747" height="16.0804"/>
  </objectgroup>
  <objectgroup id="4" name="StartEnd">
   <object id="4" name="BeginSquare" x="87" y="546" width="60" height="61"/>
-  <object id="5" name="EndSquare" x="1368.54" y="42.8463" width="47" height="56"/>
+  <object id="5" name="EndSquare" x="1379.75" y="42.8463" width="23.1871" height="51.7977"/>
  </objectgroup>
 </map>

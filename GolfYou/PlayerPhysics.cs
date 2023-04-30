@@ -172,6 +172,11 @@ namespace GolfYou
             return new Vector2(player.X, player.Y);
         }
 
+        private float getXVelocity()
+        {
+            return velocity.X;
+        }
+
     }
 
     }
