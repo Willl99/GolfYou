@@ -2,9 +2,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
+using TiledCS;
+using System;
 
 namespace GolfYou
 {
@@ -20,7 +19,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx"};
+		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
 		int levelCounter = 0;
 
 		private Texture2D startMenuSprites;
@@ -32,7 +31,10 @@ namespace GolfYou
 		public static bool startButtonPressed;
 		public static bool loadControlMenu;
 		public static bool controlButtonPressed;
+		public static bool deathMenu;
+		public List<Enemy> enemies;
 
+		private SpriteFont hudFont;
 
 		public Game1()
 		{
@@ -58,6 +60,9 @@ namespace GolfYou
 			loadMainMenu = false;
 			controlButtonPressed = false;
 			levelEnd = false;
+			deathMenu = false;
+			enemies = new List<Enemy>();
+			hudFont = Content.Load<SpriteFont>("File");
 
         }
 
@@ -99,7 +104,6 @@ namespace GolfYou
                     }
                 }
             }
-
 			// if start pressed, start loading level and the game
 			if (startButtonPressed && !levelEnd)
 			{
@@ -115,7 +119,23 @@ namespace GolfYou
                 myPlayer.setPlayerPosition(myPhysics.ApplyPhysics(gameTime, Window.ClientBounds.Height, Window.ClientBounds.Width, ref myPlayer.rolling, myPlayer.getPlayerHitbox(),
                 myPlayer.getMovement(), myPlayer.getWasPutting(), myPlayer.getFacing(), myPlayer.getHittingMode(), myHUD.getVelModifier(), myHUD.getAngle(), levelManager.getCollisionLayer()));
                 levelManager.endCurLevel(myPlayer.getPlayerHitbox());
+				updateEnemies();
             }
+
+			if (deathMenu)
+			{
+				if (mouseState.LeftButton == ButtonState.Pressed)
+				{
+					if (myMenu.didPressExitToStart(mouseState))
+					{
+						deathMenu = false;
+						controlButtonPressed = false;
+						startButtonPressed= false;
+						startMenu = true;
+						levelCounter = 0;
+					}
+				}
+			}
 
 			// if level end, press exit to main menu, go back and load main
 
@@ -147,16 +167,21 @@ namespace GolfYou
                 _spriteBatch.Begin();
 				myMenu.drawStartMenu(_spriteBatch);
             }
+			else if (deathMenu)
+			{
+				_spriteBatch.Begin();
+				myMenu.drawDeathMenu(_spriteBatch);
+			}
             else if (startButtonPressed && !levelEnd)
             {
                 _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: myCamera.Transform);
                 levelManager.drawLevel(_spriteBatch);
                 myPlayer.drawPlayer(_spriteBatch, gameTime, myPhysics.getVelocity());
                 myHUD.drawHudContent(_spriteBatch, gameTime, myPlayer.getHittingMode(), myPlayer.getIsPutting(), myPlayer.getWasPutting(), myPlayer.getPosition(), myPlayer.getAnglePutting(), myPlayer.getFacing());
+                drawEnemies();
                 _spriteBatch.End();
 				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
-				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 
-
+				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 	
 
             }
 			else if (controlButtonPressed)
@@ -183,6 +208,62 @@ namespace GolfYou
             myPlayer.setSpawnLocation(levelManager.getPlayerSpawnLocation());
             levelEnd = false;
             levelCounter++;
+			// Create enemy objects and store in array
+			enemies = new List<Enemy>(); // Delete old array
+			TiledLayer enemytiles = levelManager.getEnemyLayer();
+			foreach (var obj in enemytiles.objects)
+			{
+				var objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
+				enemies.Add(new Enemy(this.Content, obj.name=="Stationary", new Vector2(obj.x, obj.y)));
+			}
         }
+
+		private void updateEnemies()
+		{
+			TiledLayer collisionLayer = levelManager.getCollisionLayer();
+			int i=0;
+			List<int> rem = new List<int>(); // List of enemies who died in this frame
+			foreach (Enemy enemy in enemies)
+			{
+				playerEnemyCollision(enemy);
+				if (enemy.isDead()) rem.Add(i);
+				enemy.updateEnemy(collisionLayer);
+				i++;
+			}
+			if (rem.Count>0)
+			{
+				// List needs to be in descending order
+				rem.Sort();
+				rem.Reverse();
+
+				foreach (int j in rem)
+				{
+					enemies.RemoveAt(j);
+				}
+			}
+		}
+
+		private void drawEnemies()
+		{
+			foreach (Enemy enemy in enemies)
+			{
+				enemy.drawEnemy(_spriteBatch);
+			}
+		}
+
+		private void playerEnemyCollision(Enemy enemy)
+		{
+			if (myPlayer.getPlayerHitbox().Intersects(enemy.getHitBox()) && !enemy.isDying())
+			{
+				if (myPlayer.getHittingMode()==1 && Math.Abs(myPhysics.getVelocity().X)>250)
+				{
+					enemy.setDeath(); // Kill enemy if player is putting and moving fast enough
+				}
+				else 
+				{
+					deathMenu = true; // Kill player if player is either not putting or not moving fast enough
+				}
+			}
+		}
 	}
 }

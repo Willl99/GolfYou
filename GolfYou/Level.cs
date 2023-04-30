@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,6 +20,7 @@ namespace GolfYou
         private Texture2D flagTexture;
         private TiledLayer collisionLayer;
         private TiledLayer endLayer;
+        private TiledLayer enemyLayer;
 
         [Flags]
         enum Trans
@@ -52,15 +48,13 @@ namespace GolfYou
 
             collisionLayer = map.Layers.First(l => l.name == "Collision");
             endLayer = map.Layers.First(l => l.name == "StartEnd");
-
+            enemyLayer = map.Layers.First(l => l.name == "Enemies");
         }
         
         public void drawLevel(SpriteBatch _spriteBatch)
         {
             var tileLayers = map.Layers.Where(x => x.type == TiledLayerType.TileLayer);
             var flagLayer = map.Layers.Where(x => x.type == TiledLayerType.ImageLayer).First();
-            
-
 
             foreach (var layer in tileLayers)
             {
@@ -170,6 +164,11 @@ namespace GolfYou
         public Vector2 getMapBounds()
         {
             return new Vector2(map.Width * 32, map.Height * 32);
+        }
+
+        public TiledLayer getEnemyLayer()
+        {
+            return enemyLayer;
         }
 
     }
