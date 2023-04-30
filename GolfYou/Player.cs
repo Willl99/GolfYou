@@ -33,6 +33,7 @@ namespace GolfYou
         private bool wasPutting; //Was the player just putting?
         private bool anglePutting; //Angle the player chose for the current putt
         private int hittingMode; // 0 = drive, 1 = tap / putter
+        private bool EPressed;
 
         private const Buttons puttButton = Buttons.A;
 
@@ -54,6 +55,7 @@ namespace GolfYou
 
             rolling = false;
             isPutting = false;
+            EPressed = false;
 
             origin = new Vector2(head.Width / 2f, head.Height / 2f);
 
@@ -293,6 +295,15 @@ namespace GolfYou
                 if (hittingMode == 0) { hittingMode = 1; }
                 else { hittingMode = 0; }
             }
+            if ((myKeyboard.HasBeenPressed(Keys.E) || myGamepad.HasBeenPressed(Buttons.X)))
+            {
+                EPressed = true;
+            }
+            else if (((!myKeyboard.HasBeenPressed(Keys.E) && !myGamepad.HasBeenPressed(Buttons.X))))
+            {
+                EPressed = false;
+            }
+
 
             playerHitbox.X += (int)movement;
 
@@ -300,6 +311,12 @@ namespace GolfYou
         }
 
         //Lots of getters down here to share info with HUD and Physics classes
+
+
+        public bool wasEPressed()
+        {
+            return EPressed;
+        }
 
         public bool getIsPutting()
         {

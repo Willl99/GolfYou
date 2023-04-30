@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using TiledCS;
 using System;
+using System.Diagnostics;
 
 namespace GolfYou
 {
@@ -104,25 +105,24 @@ namespace GolfYou
                     }
                 }
             }
+
 			if (paused)
 			{
-				if (mouseState.LeftButton == ButtonState.Pressed)
+                myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
 					if (myMenu.didPressExitToStart(mouseState))
 						{
 							toMenu();
-						}
-					if (Keyboard.GetState().IsKeyDown(Keys.E))
-						{
-							unPause();
 						}
 					if (myMenu.didPressRestart(mouseState))
 						{
 							restartLevel();
 						}
 				}
-				if (Keyboard.GetState().IsKeyDown(Keys.E))
+                if (myPlayer.wasEPressed())
 				{
+					Debug.WriteLine("entered");
 					unPause();
 				}
 			}
@@ -135,7 +135,7 @@ namespace GolfYou
 
                 myPlayer.playAnimation(gameTime);
                 myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
-				if (Keyboard.GetState().IsKeyDown(Keys.E))
+				if (myPlayer.wasEPressed())
 				{
 					toPause();
 				}
@@ -319,7 +319,7 @@ namespace GolfYou
 			paused = false;
 			deathMenu = false;
 		}
-		private void toPause()
+		public void toPause()
 		{
 			paused = true;
 			controlButtonPressed = false;
@@ -327,14 +327,15 @@ namespace GolfYou
 			levelEnd = false;
 			deathMenu = false;
 		}
-		private void unPause()
+		public void unPause()
 		{
-			paused = false;
+			
 			controlButtonPressed = false;
 			startButtonPressed = true;
 			levelEnd = false;
 			deathMenu = false;
-		}
+            paused = false;
+        }
 		private void restartLevel()
 		{
 			levelCounter--;
