@@ -61,7 +61,6 @@
  <objectgroup id="6" name="Collision">
   <object id="3" x="0" y="0" width="30.1385" height="638.227"/>
   <object id="4" x="-1.77285" y="609.861" width="127.645" height="28.3657"/>
-  <object id="5" x="95.7341" y="622.271" width="221.607" height="15.9557"/>
   <object id="6" x="288.975" y="609.861" width="989.19" height="28.3657"/>
   <object id="7" x="896.07" y="-1.77285" width="32.9054" height="616.953"/>
   <object id="12" x="930.748" y="512.355" width="28.3657" height="33.6842"/>
