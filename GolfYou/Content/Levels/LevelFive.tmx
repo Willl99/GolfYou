@@ -75,7 +75,6 @@
   <object id="22" x="1504" y="160" width="31.7762" height="30.6955"/>
   <object id="23" x="1248.68" y="95.6621" width="30.7367" height="159.837"/>
   <object id="24" x="1248" y="224" width="347.666" height="31.6972"/>
-  <object id="26" x="1313.51" y="622.904" width="254.747" height="16.0804"/>
  </objectgroup>
  <objectgroup id="4" name="StartEnd">
   <object id="4" name="BeginSquare" x="87" y="546" width="60" height="61"/>
