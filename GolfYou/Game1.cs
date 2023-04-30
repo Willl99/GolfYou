@@ -19,7 +19,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelThree.tmx", "LevelOne.tmx", "LevelTwo.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
+		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
 		int levelCounter = 0;
 
 		private Texture2D startMenuSprites;

@@ -85,7 +85,11 @@ namespace GolfYou
         public void drawEnemy(SpriteBatch _spriteBatch)
         {
             Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 24*2, 24*2);
-            if (iDeath>=0) sourceRectangle = getAnimFrame(inDeath[frame]);
+            if (iDeath>=0)
+            {
+                if (frame >= inDeath.Length) frame = inDeath.Length-1;
+                sourceRectangle = getAnimFrame(inDeath[frame]);
+            }
             else if (idle) sourceRectangle = getAnimFrame(idleAnimation[frame]);
             else sourceRectangle = getAnimFrame(walkingAnimation[frame]);
             if (idle || forward) _spriteBatch.Draw(right, destinationRectangle, sourceRectangle, Color.White);
