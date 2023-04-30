@@ -45,9 +45,7 @@
 89,107,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,108,89
 </data>
  </layer>
- <objectgroup id="10" name="Enemies">
-  <object id="25" x="189.808" y="421.91" width="33.0101" height="33.0101"/>
- </objectgroup>
+ <objectgroup id="10" name="Enemies"/>
  <objectgroup id="5" name="Collision">
   <object id="4" x="0" y="0" width="32.0476" height="512.855"/>
   <object id="5" x="0.0018" y="481.034" width="799.053" height="31.8657"/>
