@@ -60,7 +60,7 @@
  </objectgroup>
  <objectgroup id="3" name="Collision">
   <object id="1" x="0" y="-31.6126" width="31.7755" height="669.67"/>
-  <object id="2" x="0.303067" y="608" width="1311.94" height="31.4545"/>
+  <object id="2" x="0.303067" y="608" width="1309.58" height="31.4545"/>
   <object id="3" x="1568" y="0" width="29.3333" height="606"/>
   <object id="10" x="285.548" y="512" width="96" height="32"/>
   <object id="12" x="481.222" y="481.222" width="222.841" height="29.7762"/>
