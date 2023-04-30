@@ -25,6 +25,8 @@ namespace GolfYou
         const double velocity = 0.08; // How fast velocity is for enemies
         bool onPlatform;
         Rectangle platform = new Rectangle(-1, -2, 0, 0); // Dumb values so the platform identifying code works
+        int[] inDeath = {12, 13, 14, 15, 0}; // Death animations and removal (if at end of array then enemy will be removed entirely)
+        int iDeath; // Index of death array
 
         public Enemy(ContentManager Content, bool stationary, Vector2 pos)
         {
@@ -39,6 +41,7 @@ namespace GolfYou
             hitBox = new Rectangle((int)pos.X, (int)pos.Y, 38, 28);
             yVelo = 0;
             onPlatform = false;
+            iDeath = -1;
         }
 
         public void updateEnemy(TiledLayer collisionLayer)
@@ -50,7 +53,21 @@ namespace GolfYou
                 if (incFrame)
                 {
                     frame++;
-                    if ((idle & frame==idleAnimation.Length-1) | (!idle & frame==walkingAnimation.Length-1)) incFrame = false;
+                    if (iDeath>=0 && frame>=inDeath.Length-1)
+                    {
+                        frame = inDeath.Length-1;
+                        incFrame = false;
+                    }
+                    else if (idle && frame==idleAnimation.Length-1)
+                    {
+                        frame = idleAnimation.Length-1;
+                        incFrame = false;
+                    }
+                    else if (!idle && frame==walkingAnimation.Length-1)
+                    {
+                        frame = walkingAnimation.Length-1;
+                        incFrame = false;
+                    }
                 }
                 else
                 {
@@ -62,12 +79,14 @@ namespace GolfYou
             position.Y += (float)yVelo;
             hitBox.X = (int)position.X;
             hitBox.Y = (int)position.Y;
+            if (iDeath>0) iDeath++;
         }
 
         public void drawEnemy(SpriteBatch _spriteBatch)
         {
             Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, 24*2, 24*2);
-            if (idle) sourceRectangle = getAnimFrame(idleAnimation[frame]);
+            if (iDeath>=0) sourceRectangle = getAnimFrame(inDeath[frame]);
+            else if (idle) sourceRectangle = getAnimFrame(idleAnimation[frame]);
             else sourceRectangle = getAnimFrame(walkingAnimation[frame]);
             if (idle || forward) _spriteBatch.Draw(right, destinationRectangle, sourceRectangle, Color.White);
             else _spriteBatch.Draw(left, destinationRectangle, sourceRectangle, Color.White);
@@ -154,6 +173,16 @@ namespace GolfYou
         public bool getOnPlatform()
         {
             return onPlatform;
+        }
+
+        public bool isDead()
+        {
+            return iDeath==inDeath.Length;
+        }
+
+        public void setDeath()
+        {
+            iDeath++;
         }
     }
 }

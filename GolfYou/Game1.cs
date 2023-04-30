@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using TiledCS;
+using System;
 
 namespace GolfYou
 {
@@ -33,7 +34,7 @@ namespace GolfYou
 		public List<Enemy> enemies;
 
 		private SpriteFont hudFont;
-		private bool DEBUG = true; // Turns on enemy count/position display and draws hitboxes
+		private bool DEBUG = false; // Turns on enemy count/position display and draws hitboxes
 
 		public Game1()
 		{
@@ -203,9 +204,22 @@ namespace GolfYou
 
 		private void updateEnemies()
 		{
+			TiledLayer collisionLayer = levelManager.getCollisionLayer();
+			int i=0;
+			List<int> rem = new List<int>(); // List of enemies who died in this frame
 			foreach (Enemy enemy in enemies)
 			{
-				enemy.updateEnemy(levelManager.getCollisionLayer());
+				playerEnemyCollision(enemy);
+				if (enemy.isDead()) rem.Add(i);
+				enemy.updateEnemy(collisionLayer);
+				i++;
+			}
+			if (rem.Count>0)
+			{
+				foreach (int j in rem)
+				{
+					enemies.RemoveAt(j);
+				}
 			}
 		}
 
@@ -223,6 +237,21 @@ namespace GolfYou
 					enemy.drawHitBoxes(_spriteBatch);
 					string str = "("+hb.X+","+hb.Y+"), On Platform: " + onPlatform.ToString();
 					_spriteBatch.DrawString(hudFont, str, new Vector2(36, 30+i*16), Color.Purple);
+				}
+			}
+		}
+
+		private void playerEnemyCollision(Enemy enemy)
+		{
+			if (myPlayer.getPlayerHitbox().Intersects(enemy.getHitBox()))
+			{
+				if (myPlayer.getHittingMode()==1 && Math.Abs(myPlayer.getMovement())>1)
+				{
+					enemy.setDeath(); // Kill enemy if player is putting and moving fast enough
+				}
+				else 
+				{
+					// Kill player if player is either not putting or not moving fast enough
 				}
 			}
 		}
