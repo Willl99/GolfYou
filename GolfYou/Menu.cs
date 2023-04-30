@@ -96,7 +96,6 @@ namespace GolfYou
             _spriteBatch.DrawString(font, "C to cancel out of putting mode, Q to change putting mode", new Vector2(175, 225), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "Defeat enemies by putting into them (make sure you're going fast too!)", new Vector2(125, 250), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "Exit to Main Menu", new Vector2(340, 275), Microsoft.Xna.Framework.Color.Cyan);
-            
         }
 
         public void drawLevelEndMenu(SpriteBatch _spriteBatch)
@@ -110,17 +109,32 @@ namespace GolfYou
 
         public void drawDeathMenu(SpriteBatch _spriteBatch)
         {
-            adjustMenuBox(new Vector2(350, 300));
+            adjustMenuBox(new Vector2(350, 350));
+            adjustRestartBox(new Vector2(350, 300));
             _spriteBatch.Draw(menuBackground, new Vector2(0, 0), new Microsoft.Xna.Framework.Rectangle(0, 870, 800, 480), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "You Died :(", new Vector2(348, 150), Microsoft.Xna.Framework.Color.White);
             _spriteBatch.DrawString(font, "(Tip: Make sure you are in putt mode to defeat enemies, and are moving fast!)", new Vector2(125, 200), Microsoft.Xna.Framework.Color.White);
-            _spriteBatch.DrawString(font, "Retart Level", new Vector2(350, 300), Microsoft.Xna.Framework.Color.Cyan);
+            _spriteBatch.DrawString(font, "Restart Level", new Vector2(350, 300), Microsoft.Xna.Framework.Color.Cyan);
             _spriteBatch.DrawString(font, "Main Menu", new Vector2(350, 350), Microsoft.Xna.Framework.Color.Cyan);
+        }
+        public void drawPauseMenu(SpriteBatch _spriteBatch)
+        {
+            adjustRestartBox(new Vector2(350, 200));
+            adjustMenuBox(new Vector2(350, 250));
+            _spriteBatch.Draw(menuBackground, new Vector2(0, 0), new Microsoft.Xna.Framework.Rectangle(0, 870, 800, 480), Microsoft.Xna.Framework.Color.White);
+            _spriteBatch.DrawString(font, "Game Paused (Press 'E' to Unpause)", new Vector2(240, 150), Microsoft.Xna.Framework.Color.White);
+            _spriteBatch.DrawString(font, "Restart Level", new Vector2(350, 200), Microsoft.Xna.Framework.Color.Cyan);
+            _spriteBatch.DrawString(font, "Main Menu", new Vector2(350, 250), Microsoft.Xna.Framework.Color.Cyan);
+            _spriteBatch.DrawString(font, "W: Move Left | D: Move Right | Q: Switch to Putter/Driver | Space: Swing Club | C: Cancel Swing", new Vector2(50, 300), Microsoft.Xna.Framework.Color.White);
         }
 
         private void adjustMenuBox(Vector2 vec)
         {
             exitToStartMenuHitbox = new Rectangle((int)vec.X, (int)vec.Y, 100, 50);
+        }
+        private void adjustRestartBox(Vector2 vec)
+        {
+            restartMenuHitbox = new Rectangle((int)vec.X, (int)vec.Y, 100, 50);
         }
     }
 }

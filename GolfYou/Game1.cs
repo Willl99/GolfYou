@@ -19,7 +19,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelThree.tmx", "LevelFive.tmx"};
+		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelFive.tmx", "LevelThree.tmx"};
 		int levelCounter = 0;
 
 		private Texture2D startMenuSprites;
@@ -33,6 +33,7 @@ namespace GolfYou
 		public static bool controlButtonPressed;
 		public static bool deathMenu;
 		public List<Enemy> enemies;
+		public static bool paused;
 
 		private SpriteFont hudFont;
 
@@ -61,6 +62,7 @@ namespace GolfYou
 			controlButtonPressed = false;
 			levelEnd = false;
 			deathMenu = false;
+			paused = false;
 			enemies = new List<Enemy>();
 			hudFont = Content.Load<SpriteFont>("File");
 
@@ -82,12 +84,13 @@ namespace GolfYou
                     if (myMenu.didPressStart(mouseState))
                     {
                         startButtonPressed = true;
-
+						paused = false;
                     }
                     if (myMenu.didPressControls(mouseState))
                     {
                         controlButtonPressed = true;
                         startMenu = false;
+						paused = false;
                     }
                 }
             }
@@ -101,18 +104,45 @@ namespace GolfYou
                     {
 						controlButtonPressed = false;
                         startMenu = true;
+						paused = false;
                     }
                 }
             }
+			if (paused)
+			{
+				if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+					if (myMenu.didPressExitToStart(mouseState))
+						{
+							toMenu();
+						}
+					if (Keyboard.GetState().IsKeyDown(Keys.E))
+						{
+							unPause();
+						}
+					if (myMenu.didPressRestart(mouseState))
+						{
+							restartLevel();
+						}
+				}
+				if (Keyboard.GetState().IsKeyDown(Keys.E))
+				{
+					unPause();
+				}
+			}
+
 			// if start pressed, start loading level and the game
 			if (startButtonPressed && !levelEnd)
 			{
 				if (startMenu) { LoadLevel(); }
 				startMenu = false;
-				
 
                 myPlayer.playAnimation(gameTime);
                 myPlayer.handlePlayerInput(Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), gameTime);
+				if (Keyboard.GetState().IsKeyDown(Keys.E))
+				{
+					toPause();
+				}
                 myCamera.Follow(myPlayer.getPlayerHitbox(), levelManager.getMapBounds());
                 myHUD.playHudAnimations(gameTime, myPlayer.getIsPutting(), myPlayer.rolling, myPlayer.getAnglePutting(), myPlayer.getFacing()); //HUD MUST be drawn before physics as the physics relies on calculations done in the HUD class,
                                                                                                                                                 //weird I know, but it was an easy solution
@@ -136,10 +166,7 @@ namespace GolfYou
 					}
 					if (myMenu.didPressRestart(mouseState))
 					{
-
-						levelCounter--;
-						LoadLevel();
-                        deathMenu = false;
+						restartLevel();
                     }
 				}
 			}
@@ -152,11 +179,7 @@ namespace GolfYou
 				{
 					if (myMenu.didPressExitToStart(mouseState))
 					{
-						levelEnd = false;
-						controlButtonPressed = false;
-						startButtonPressed= false;
-						startMenu = true;
-						levelCounter = 0;
+						toMenu();
 					}
 					else { LoadLevel(); }
 				}
@@ -189,7 +212,7 @@ namespace GolfYou
                 _spriteBatch.End();
 				_spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 				myHUD.drawStaticHudContent(_spriteBatch, myPlayer.getHittingMode()); 	
-
+				_spriteBatch.DrawString(hudFont, "Press 'E' to Pause/Show Controls", new Vector2(40, 20), Color.Purple);
             }
 			else if (controlButtonPressed)
 			{
@@ -202,6 +225,11 @@ namespace GolfYou
                 _spriteBatch.Begin();
 				myMenu.drawLevelEndMenu(_spriteBatch);
             }
+			else if (paused)
+			{
+				_spriteBatch.Begin();
+				myMenu.drawPauseMenu(_spriteBatch);
+			}
 
             _spriteBatch.End();
 			
@@ -271,6 +299,42 @@ namespace GolfYou
 					deathMenu = true; // Kill player if player is either not putting or not moving fast enough
 				}
 			}
+		}
+
+		private void toMenu()
+		{
+			levelEnd = false;
+			controlButtonPressed = false;
+			startButtonPressed= false;
+			startMenu = true;
+			levelCounter = 0;
+			paused = false;
+			deathMenu = false;
+		}
+		private void toPause()
+		{
+			paused = true;
+			controlButtonPressed = false;
+			startButtonPressed = false;
+			levelEnd = false;
+			deathMenu = false;
+		}
+		private void unPause()
+		{
+			paused = false;
+			controlButtonPressed = false;
+			startButtonPressed = true;
+			levelEnd = false;
+			deathMenu = false;
+		}
+		private void restartLevel()
+		{
+			levelCounter--;
+			LoadLevel();
+			deathMenu = false;
+			paused = false;
+			startButtonPressed = true;
+			controlButtonPressed = false;
 		}
 	}
 }
