@@ -31,10 +31,9 @@ namespace GolfYou
 		public static bool loadControlMenu;
 		public static bool controlButtonPressed;
 		public List<Enemy> enemies;
-		private EnemyPhysics enemyPhysics;
 
 		private SpriteFont hudFont;
-		private bool DEBUG = false; // Turns on enemy count/position display and draws hitboxes
+		private bool DEBUG = true; // Turns on enemy count/position display and draws hitboxes
 
 		public Game1()
 		{
@@ -192,7 +191,6 @@ namespace GolfYou
 			enemies = new List<Enemy>(); // Delete old array
 			if (DEBUG)
 			{
-				enemies.Add(new Enemy(this.Content, true, new Vector2(200, 200)));
 				enemies.Add(new Enemy(this.Content, false, new Vector2(250, 200)));
 			}
 			TiledLayer enemytiles = levelManager.getEnemyLayer();
@@ -207,32 +205,25 @@ namespace GolfYou
 		{
 			foreach (Enemy enemy in enemies)
 			{
-				enemy.updateEnemy();
+				enemy.updateEnemy(levelManager.getCollisionLayer());
 			}
 		}
 
 		private void drawEnemies()
 		{
-			if (DEBUG)
-			{
-				string num_enemies = "Number of Enemies: " + enemies.Count.ToString();
-            	_spriteBatch.DrawString(hudFont, num_enemies, new Vector2(35, 30), Color.Purple);
-			}
-			
 			int i = 0;
 			foreach (Enemy enemy in enemies)
 			{
+				i++;
+				enemy.drawEnemy(_spriteBatch);
 				if (DEBUG)
 				{
-					i++;
 					Rectangle hb = enemy.getHitBox();
-					int frame = enemy.getFrame();
-					bool idle = enemy.getIdle();
-					string str = "(" + hb.X.ToString() + ", " + hb.Y.ToString() + ") Idle: " + idle.ToString() + " Frame Index: " + frame.ToString();
-					_spriteBatch.DrawString(hudFont, str, new Vector2(35, 30+i*16), Color.Purple);
+					bool onPlatform = enemy.getOnPlatform();
 					enemy.drawHitBoxes(_spriteBatch);
+					string str = "("+hb.X+","+hb.Y+"), On Platform: " + onPlatform.ToString();
+					_spriteBatch.DrawString(hudFont, str, new Vector2(36, 30+i*16), Color.Purple);
 				}
-				enemy.drawEnemy(_spriteBatch);
 			}
 		}
 	}

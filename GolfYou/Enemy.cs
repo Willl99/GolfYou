@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TiledCS;
+using System;
 
 namespace GolfYou
 {
@@ -9,20 +10,23 @@ namespace GolfYou
     {
         bool idle;
         Rectangle sourceRectangle;
-        Rectangle enemyHitBox = new Rectangle(0, 200, 32, 32);
         int[] walkingAnimation = {6, 7, 8, 9, 10, 11}; // Frames when enemy is moving
         int[] idleAnimation = {0, 1, 2, 3, 4, 5}; // Frames when enemy is idle
         Texture2D left;
         Texture2D right;
         Vector2 position;
+        double yVelo;
         bool forward; // Determines whether enemy is facing left or right
         int frame;
         bool incFrame;
         Rectangle hitBox;
         int half = 0;
         int halfcap = 7; // Slows down animations with larger numbers (non-fixable fps, might want to change later to account for gameTime)
+        const double velocity = 0.08; // How fast velocity is for enemies
+        bool onPlatform;
+        Rectangle platform = new Rectangle(-1, -2, 0, 0); // Dumb values so the platform identifying code works
 
-         public Enemy(ContentManager Content, bool stationary, Vector2 pos)
+        public Enemy(ContentManager Content, bool stationary, Vector2 pos)
         {
             idle = stationary;
             forward = true;
@@ -32,10 +36,12 @@ namespace GolfYou
             left = Content.Load<Texture2D>("Sprites/EnemyLeft");
             right = Content.Load<Texture2D>("Sprites/EnemyRight");
             position = pos;
-            hitBox = new Rectangle((int)pos.X, (int)pos.Y, 12, 12);
+            hitBox = new Rectangle((int)pos.X, (int)pos.Y, 38, 28);
+            yVelo = 0;
+            onPlatform = false;
         }
 
-        public void updateEnemy()
+        public void updateEnemy(TiledLayer collisionLayer)
         {
             half++;
             if (half==halfcap)
@@ -52,6 +58,10 @@ namespace GolfYou
                     if (frame==0) incFrame = true;
                 }
             }
+            HandleCollisions(collisionLayer);
+            position.Y += (float)yVelo;
+            hitBox.X = (int)position.X;
+            hitBox.Y = (int)position.Y;
         }
 
         public void drawEnemy(SpriteBatch _spriteBatch)
@@ -65,7 +75,6 @@ namespace GolfYou
 
         public void drawHitBoxes(SpriteBatch _spriteBatch)
         {
-            sourceRectangle = getAnimFrame(frame);
             DrawRectangle(_spriteBatch, hitBox);
         }
 
@@ -78,7 +87,7 @@ namespace GolfYou
         {
             Vector2 pos = new Vector2(Rec.X, Rec.Y);
             sb.Draw(left, pos, Rec,
-                Color.Green * 1.0f,
+                Color.Purple * 1.0f,
                 0, Vector2.Zero, 1.0f,
                 SpriteEffects.None, 0.00001f);
         }
@@ -88,14 +97,63 @@ namespace GolfYou
             return hitBox;
         }
 
-        public int getFrame()
+        public void HandleCollisions(TiledLayer collisionLayer)
         {
-            return frame;
+            foreach (var obj in collisionLayer.objects)
+            {
+                Rectangle objRect = new Rectangle((int)obj.x, (int)obj.y, (int)obj.width, (int)obj.height);
+                bool landingPlatform = objRect.Equals(platform);
+                bool within = ((hitBox.Right>=objRect.Left && hitBox.Right <= objRect.Right) || (hitBox.Left>=objRect.Right && hitBox.Left <= objRect.Left));
+                if (!onPlatform && objRect.Intersects(hitBox)) // If enemy is stuck in box, push upwards
+                {
+                    land(objRect);
+                }
+                if (!onPlatform)
+                {
+                    bool isAbove = within && hitBox.Bottom<objRect.Top; // Calculates if enemy is directly above collision layer
+                    bool willLand = isAbove && hitBox.Bottom+yVelo>=objRect.Top; // Calculates if enemy will pass through object while falling
+                    if (willLand)
+                    {
+                        land(objRect);
+                    }
+                    else
+                    {
+                        yVelo += velocity;
+                        onPlatform = false;
+                    }
+                }
+                else if (!idle)
+                {
+                    if (!landingPlatform) // Don't care if enemy doesn't move or if it collides with the same platform it's standing on
+                    {
+                        bool inBetween = ((hitBox.Top < objRect.Bottom && hitBox.Top > objRect.Top) || (hitBox.Bottom > objRect.Top && hitBox.Bottom < objRect.Bottom));
+                        bool leftCollide = forward && inBetween && Math.Abs(hitBox.Right-objRect.Left)<2;
+                        bool rightCollide = !forward && inBetween && (hitBox.Left == objRect.Right);
+                        if (leftCollide || rightCollide) forward = !forward;
+                    }
+                    else if (!within) // Enemy goes into free fall if they walk off a platform
+                    {
+                        onPlatform = false;
+                        platform = new Rectangle(-1, -2, 0, 0);
+                    }
+                }
+            }
+            if (idle) return;
+            if (forward) position.X++;
+            else position.X--;
         }
 
-        public bool getIdle()
+        private void land(Rectangle y)
         {
-            return idle;
+            yVelo = 0;
+            position.Y = y.Top-hitBox.Height-6;
+            onPlatform = true;
+            platform = y;
+        }
+
+        public bool getOnPlatform()
+        {
+            return onPlatform;
         }
     }
 }
