@@ -58,12 +58,12 @@ namespace GolfYou
                         frame = inDeath.Length-1;
                         incFrame = false;
                     }
-                    else if (idle && frame==idleAnimation.Length-1)
+                    else if (idle && frame>=idleAnimation.Length-1)
                     {
                         frame = idleAnimation.Length-1;
                         incFrame = false;
                     }
-                    else if (!idle && frame==walkingAnimation.Length-1)
+                    else if (!idle && frame>=walkingAnimation.Length-1)
                     {
                         frame = walkingAnimation.Length-1;
                         incFrame = false;
