@@ -34,7 +34,6 @@ namespace GolfYou
 		public static bool startButtonPressed;
 		public static bool loadControlMenu;
 		public static bool controlButtonPressed;
-		//public static bool completeMenu;
 		public static bool deathMenu;
 		public List<Enemy> enemies;
 		public static bool paused;
@@ -67,7 +66,6 @@ namespace GolfYou
 			levelEnd = false;
 			deathMenu = false;
 			paused = false;
-			//completeMenu = false;
 			enemies = new List<Enemy>();
 			hudFont = Content.Load<SpriteFont>("File");
 
