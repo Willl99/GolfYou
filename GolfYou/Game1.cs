@@ -20,9 +20,10 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelThree.tmx", "LevelFour.tmx", "LevelFive.tmx", "LevelSix.tmx", "LevelSeven.tmx", "LevelEight.tmx", "LevelNine.tmx", "LevelTen.tmx"};
 
-		int levelCounter = 0;
+        private string[] levels = { "LevelOne.tmx", "LevelTwo.tmx", "LevelThree.tmx", "LevelFour.tmx", "LevelFive.tmx", "LevelSix.tmx", "LevelSeven.tmx", "LevelEight.tmx", "LevelNine.tmx", "LevelTen.tmx" };
+
+        int levelCounter = 0;
 
 		private Texture2D startMenuSprites;
         public static int ScreenHeight;
@@ -33,6 +34,7 @@ namespace GolfYou
 		public static bool startButtonPressed;
 		public static bool loadControlMenu;
 		public static bool controlButtonPressed;
+		//public static bool completeMenu;
 		public static bool deathMenu;
 		public List<Enemy> enemies;
 		public static bool paused;
@@ -65,6 +67,7 @@ namespace GolfYou
 			levelEnd = false;
 			deathMenu = false;
 			paused = false;
+			//completeMenu = false;
 			enemies = new List<Enemy>();
 			hudFont = Content.Load<SpriteFont>("File");
 
@@ -171,19 +174,38 @@ namespace GolfYou
 				}
 			}
 
+			
+
 			// if level end, press exit to main menu, go back and load main
 
 			if (levelEnd)
 			{
-				if (mouseState.LeftButton == ButtonState.Pressed)
+				if (levelCounter == 10)
 				{
-					if (myMenu.didPressExitToStart(mouseState))
+					if (mouseState.LeftButton == ButtonState.Pressed)
 					{
-						toMenu();
+						if (myMenu.didPressExitToStart(mouseState))
+						{
+							controlButtonPressed = false;
+							startButtonPressed = false;
+							startMenu = true;
+							levelCounter = 0;
+						}
 					}
-					else { LoadLevel(); }
 				}
-			}
+				else
+				{
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        if (myMenu.didPressExitToStart(mouseState))
+                        {
+                            toMenu();
+                        }
+                        else { LoadLevel(); }
+                    }
+                }
+            }
+                
 
             base.Update(gameTime);
 		}
@@ -219,8 +241,12 @@ namespace GolfYou
 				_spriteBatch.Begin();
 				myMenu.drawControlMenu(_spriteBatch);
 			}
-
-			else if(levelEnd)
+            else if (levelCounter == 10)
+            {
+                _spriteBatch.Begin();
+                myMenu.drawCompleteMenu(_spriteBatch);
+            }
+            else if(levelEnd)
 			{
                 _spriteBatch.Begin();
 				myMenu.drawLevelEndMenu(_spriteBatch);
@@ -230,6 +256,9 @@ namespace GolfYou
 				_spriteBatch.Begin();
 				myMenu.drawPauseMenu(_spriteBatch);
 			}
+			
+
+
 
             _spriteBatch.End();
 			

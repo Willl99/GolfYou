@@ -15,6 +15,7 @@ namespace GolfYou
         private Microsoft.Xna.Framework.Rectangle controlsExitToStartMenuHitbox = new Microsoft.Xna.Framework.Rectangle(350, 250, 100, 50);
         private Microsoft.Xna.Framework.Rectangle exitToStartMenuHitbox = new Microsoft.Xna.Framework.Rectangle(350, 250, 100, 50);
         private Microsoft.Xna.Framework.Rectangle exitToStartMenuHitboxDeath = new Microsoft.Xna.Framework.Rectangle(350, 350, 100, 50);
+        private Microsoft.Xna.Framework.Rectangle exitToStartMenuHitboxComplete = new Microsoft.Xna.Framework.Rectangle(350, 250, 100, 50);
         private Microsoft.Xna.Framework.Rectangle restartMenuHitbox = new Microsoft.Xna.Framework.Rectangle(350, 300, 100, 50);
 
         public void loadMenus(ContentManager Content)
@@ -77,6 +78,15 @@ namespace GolfYou
             return false;
         }
 
+        public bool didPressExitToStartComplete(MouseState mouseState)
+        {
+            if (exitToStartMenuHitboxComplete.Contains(mouseState.X, mouseState.Y))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void drawStartMenu(SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(menuBackground, new Vector2(0, 0), new Microsoft.Xna.Framework.Rectangle(0, 870, 800, 480), Microsoft.Xna.Framework.Color.White);
@@ -107,6 +117,8 @@ namespace GolfYou
             _spriteBatch.DrawString(font, "Main Menu", new Vector2(350, 250), Microsoft.Xna.Framework.Color.Cyan);
         }
 
+
+
         public void drawDeathMenu(SpriteBatch _spriteBatch)
         {
             adjustMenuBox(new Vector2(350, 350));
@@ -126,6 +138,14 @@ namespace GolfYou
             _spriteBatch.DrawString(font, "Restart Level", new Vector2(350, 200), Microsoft.Xna.Framework.Color.Cyan);
             _spriteBatch.DrawString(font, "Main Menu", new Vector2(350, 250), Microsoft.Xna.Framework.Color.Cyan);
             _spriteBatch.DrawString(font, "W: Move Left | D: Move Right | Q: Switch to Putter/Driver | Space: Swing Club | C: Cancel Swing", new Vector2(50, 300), Microsoft.Xna.Framework.Color.White);
+        }
+
+        public void drawCompleteMenu(SpriteBatch _spriteBatch)
+        {
+            adjustMenuBox(new Vector2(350, 250));
+            _spriteBatch.Draw(menuBackground, new Vector2(0, 0), new Microsoft.Xna.Framework.Rectangle(0, 870, 800, 480), Microsoft.Xna.Framework.Color.White);
+            _spriteBatch.DrawString(font, "GAME COMPLETE, YOU WON!", new Vector2(275, 150), Microsoft.Xna.Framework.Color.White);
+            _spriteBatch.DrawString(font, "Main Menu", new Vector2(350, 250), Microsoft.Xna.Framework.Color.Cyan);
         }
 
         private void adjustMenuBox(Vector2 vec)
