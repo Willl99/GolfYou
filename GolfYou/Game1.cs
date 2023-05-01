@@ -20,7 +20,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelSix.tmx", "LevelFour.tmx", "LevelFive.tmx", "LevelThree.tmx", "LastLevel.tmx"};
+		private string[] levels = {/*"LevelOne.tmx", "LevelTwo.tmx", "LevelThree.tmx", "LevelFour.tmx", "LevelFive.tmx", "LevelSix.tmx", "LevelSeven.tmx", "LevelEight.tmx", "LevelNine.tmx",*/ "LevelTen.tmx"};
 
 		int levelCounter = 0;
 
@@ -290,7 +290,7 @@ namespace GolfYou
 		{
 			if (myPlayer.getPlayerHitbox().Intersects(enemy.getHitBox()) && !enemy.isDying())
 			{
-				if (myPlayer.getHittingMode()==1 && Math.Abs(myPhysics.getVelocity().X)>250)
+				if (myPlayer.getHittingMode()==1 && Math.Abs(myPhysics.getVelocity().X)>150 && myPlayer.rolling)
 				{
 					enemy.setDeath(); // Kill enemy if player is putting and moving fast enough
 				}

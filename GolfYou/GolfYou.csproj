@@ -34,7 +34,7 @@
 	  <None Update="Content\Levels\GolfYouScrollingTest.tmx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Content\Levels\LastLevel.tmx">
+	  <None Update="Content\Levels\LevelEight.tmx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Content\Levels\LevelFive.tmx">
@@ -49,10 +49,19 @@
 	  <None Update="Content\Levels\LevelMaterials\GolfTerrain.tsx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Content\Levels\LevelNine.tmx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Content\Levels\LevelOne.tmx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Content\Levels\LevelSeven.tmx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Content\Levels\LevelSix.tmx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Content\Levels\LevelTen.tmx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Content\Levels\LevelThree.tmx">
