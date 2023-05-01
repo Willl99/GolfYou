@@ -20,7 +20,7 @@ namespace GolfYou
 		private Camera myCamera = new Camera();
 		private Menu myMenu = new Menu();
 
-		private string[] levels = {/*"LevelOne.tmx", "LevelTwo.tmx", "LevelThree.tmx", "LevelFour.tmx", "LevelFive.tmx", "LevelSix.tmx", "LevelSeven.tmx", "LevelEight.tmx", "LevelNine.tmx",*/ "LevelTen.tmx"};
+		private string[] levels = {"LevelOne.tmx", "LevelTwo.tmx", "LevelThree.tmx", "LevelFour.tmx", "LevelFive.tmx", "LevelSix.tmx", "LevelSeven.tmx", "LevelEight.tmx", "LevelNine.tmx", "LevelTen.tmx"};
 
 		int levelCounter = 0;
 

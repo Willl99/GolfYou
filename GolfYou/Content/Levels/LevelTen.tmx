@@ -54,7 +54,7 @@
 </data>
  </layer>
  <objectgroup id="3" name="StartEnd">
-  <object id="1" name="BeginSquare" x="4515.15" y="59.8788" width="39" height="50"/>
+  <object id="1" name="BeginSquare" x="44.15" y="555.545" width="39" height="50"/>
   <object id="2" name="EndSquare" x="4596" y="44" width="54" height="52"/>
  </objectgroup>
  <objectgroup id="4" name="Collision">
